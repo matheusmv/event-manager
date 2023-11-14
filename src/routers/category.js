@@ -1,12 +1,14 @@
-import prismaClient from "../db/index.js";
-import { CategoryService } from "../services/categories.js";
-import { 
+import prismaClient from '../db/index.js';
+
+import { CategoryService } from '../services/categories.js';
+
+import {
     createCategory,
     deleteCategory,
     getAllCategories,
     getCategoryById,
-    updateCategory
-} from "../controllers/categories.js";
+    updateCategory,
+} from '../controllers/categories.js';
 
 export function buildCategoryRoute(router) {
     const endPoint = '/api/v1/categories';
