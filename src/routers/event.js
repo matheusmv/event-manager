@@ -1,7 +1,14 @@
 import prismaClient from '../db/index.js';
 
-import { createEvent, deleteEvent, getAllEvents, getEventById, updateEvent } from '../controllers/events.js';
 import { EventService } from '../services/events.js';
+
+import {
+    createEvent,
+    deleteEvent,
+    getAllEvents,
+    getEventById,
+    updateEvent,
+} from '../controllers/events.js';
 
 export function buildEventRoute(router) {
     const endPoint = '/api/v1/events';

@@ -9,5 +9,5 @@ app.use(getRouters());
 const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
-    console.log(`app listenting on: http://localhost:${port}`)
-})
+    console.log(`app listenting on: http://localhost:${port}`);
+});

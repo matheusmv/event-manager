@@ -1,5 +1,5 @@
 export class EventService {
-    constructor (prisma) {
+    constructor(prisma) {
         this.prisma = prisma;
     }
 
