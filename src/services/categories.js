@@ -3,23 +3,23 @@ export class CategoryService {
         this.prisma = prisma;
     }
 
-    create(name) {
+    async create(name) {
         throw new Error('not implemented');
     }
 
-    getById(categoyId) {
+    async getById(categoyId) {
         throw new Error('not implemented');
     }
 
-    getAll() {
+    async getAll() {
         throw new Error('not implemented');
     }
 
-    update(categoyId, name) {
+    async update(categoyId, name) {
         throw new Error('not implemented');
     }
 
-    detele(categoyIdId) {
+    async detele(categoyIdId) {
         throw new Error('not implemented');
     }
 }

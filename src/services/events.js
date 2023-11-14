@@ -3,23 +3,23 @@ export class EventService {
         this.prisma = prisma;
     }
 
-    create(eventDetails) {
+    async create(eventDetails) {
         throw new Error('not implemented');
     }
 
-    getById(eventId) {
+    async getById(eventId) {
         throw new Error('not implemented');
     }
 
-    getAll() {
+    async getAll() {
         throw new Error('not implemented');
     }
 
-    update(eventId, eventDetails) {
+    async update(eventId, eventDetails) {
         throw new Error('not implemented');
     }
 
-    detele(eventId) {
+    async detele(eventId) {
         throw new Error('not implemented');
     }
 }
