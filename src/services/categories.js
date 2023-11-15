@@ -56,8 +56,27 @@ export class CategoryService {
         });
     }
 
-    async update(categoyId, name) {
-        throw new Error('not implemented');
+    async update(categoryId, name) {
+        const category = await this.prisma.category.findFirst({
+            where: {
+                id: categoryId,
+            },
+        });
+
+        if (!category) {
+            throw Errors.notFound(
+                `category with id ${categoryId} does not exists`,
+            );
+        }
+
+        return this.prisma.category.update({
+            where: {
+                id: categoryId,
+            },
+            data: {
+                name,
+            },
+        });
     }
 
     async detele(categoyIdId) {

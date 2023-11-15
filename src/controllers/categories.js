@@ -32,13 +32,14 @@ export function createCategory(categoryService) {
 }
 
 export function updateCategory(categoryService) {
-    return async (req, res) => {
+    return async (req, res, next) => {
         const { id } = req.params;
-        const categoryDetails = req.body;
+        const { name } = req.body;
 
-        // const category = await categoryService.update(id, categoryDetails);
-
-        return res.status(200).json({ id, ...categoryDetails });
+        return categoryService
+            .update(id, name)
+            .then((category) => HttpOk(res, category))
+            .catch((err) => next(err));
     };
 }
 
