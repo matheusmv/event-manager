@@ -1,4 +1,4 @@
-import { HttpCreated } from '../helpers/http.js';
+import { HttpCreated, HttpOk } from '../helpers/http.js';
 
 export function getAllEvents(eventService) {
     return async (req, res) => {
@@ -9,12 +9,13 @@ export function getAllEvents(eventService) {
 }
 
 export function getEventById(eventService) {
-    return async (req, res) => {
+    return async (req, res, next) => {
         const { id } = req.params;
 
-        // const event = await eventService.getById(id);
-
-        return res.status(200).json({ id });
+        return eventService
+            .getById(id)
+            .then((event) => HttpOk(res, event))
+            .catch((err) => next(err));
     };
 }
 

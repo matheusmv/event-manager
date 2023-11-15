@@ -62,7 +62,20 @@ export class EventService {
     }
 
     async getById(eventId) {
-        throw new Error('not implemented');
+        return this.eventRepository
+            .findEventById(
+                eventId,
+                selectEventWithCategoryNameAndLocationDetails(),
+            )
+            .then((event) => {
+                if (!event) {
+                    throw Errors.notFound(
+                        `event with id ${eventId} does not exists`,
+                    );
+                }
+
+                return event;
+            });
     }
 
     async getAll() {
@@ -76,4 +89,29 @@ export class EventService {
     async detele(eventId) {
         throw new Error('not implemented');
     }
+}
+
+function selectEventWithCategoryNameAndLocationDetails() {
+    return {
+        id: true,
+        name: true,
+        description: true,
+        date: true,
+        category: {
+            select: {
+                name: true,
+            },
+        },
+        local: {
+            select: {
+                cep: true,
+                state: true,
+                city: true,
+                neighborhood: true,
+                street: true,
+                number: true,
+                complement: true,
+            },
+        },
+    };
 }
