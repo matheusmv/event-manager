@@ -67,6 +67,28 @@ export class EventRepository {
         });
     }
 
+    async findEventByDateAndLocation(
+        eventDate,
+        eventLocation,
+        select = undefined,
+    ) {
+        return this.prisma.event.findFirst({
+            where: {
+                date: eventDate,
+                local: {
+                    cep: eventLocation.cep,
+                    state: eventLocation.state,
+                    city: eventLocation.city,
+                    neighborhood: eventLocation.neighborhood,
+                    street: eventLocation.street,
+                    number: eventLocation.number,
+                    complement: eventLocation.complement,
+                },
+            },
+            select: select,
+        });
+    }
+
     async findAllEvents(select = undefined) {
         return this.prisma.event.findMany({
             select: select,

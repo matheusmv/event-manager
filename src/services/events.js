@@ -41,20 +41,16 @@ export class EventService {
             });
         }
 
-        const otherEvent = await this.eventRepository.findEventByDate(
-            eventDetails.date,
-            {
-                id: true,
-                date: true,
-                local: true,
-            },
-        );
+        const otherEvent =
+            await this.eventRepository.findEventByDateAndLocation(
+                eventDetails.date,
+                eventDetails.local,
+                {
+                    id: true,
+                },
+            );
 
-        if (
-            otherEvent &&
-            dateEquals(eventDetails.date, otherEvent.date) &&
-            locationEquals(eventDetails.local, otherEvent.local)
-        ) {
+        if (otherEvent) {
             success = false;
             issues.push({
                 issue: 'conflict between events',
@@ -80,18 +76,4 @@ export class EventService {
     async detele(eventId) {
         throw new Error('not implemented');
     }
-}
-
-function dateEquals(dateA, dateB) {
-    return dateA.toISOString() === dateB.toISOString();
-}
-
-function locationEquals(locationA, locationB) {
-    return (
-        locationA.state === locationB.state &&
-        locationA.city === locationB.city &&
-        locationA.neighborhood === locationB.neighborhood &&
-        locationA.street === locationB.street &&
-        locationA.number === locationB.number
-    );
 }
