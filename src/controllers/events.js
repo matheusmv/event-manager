@@ -1,3 +1,5 @@
+import { HttpCreated } from '../helpers/http.js';
+
 export function getAllEvents(eventService) {
     return async (req, res) => {
         // const events = await eventService.getAll();
@@ -17,12 +19,13 @@ export function getEventById(eventService) {
 }
 
 export function createEvent(eventService) {
-    return async (req, res) => {
+    return async (req, res, next) => {
         const eventDetails = req.body;
 
-        // const event = await eventService.create(eventDetails);
-
-        return res.status(200).json(eventDetails);
+        return eventService
+            .create(eventDetails)
+            .then((event) => HttpCreated(res, event))
+            .catch((err) => next(err));
     };
 }
 
