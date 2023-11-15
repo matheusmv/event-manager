@@ -1,4 +1,5 @@
 import { Errors } from '../helpers/errors.js';
+import { AsyncValidator } from '../helpers/validator.js';
 
 export class EventService {
     constructor(eventRepository, categoryRepository) {
@@ -22,43 +23,46 @@ export class EventService {
     }
 
     async validateEventCreation(eventDetails) {
-        let success = true;
-        const issues = [];
+        const validator = AsyncValidator.of(eventDetails)
+            .validateAsync(async (eventDetails, issues) => {
+                const categoryEntity =
+                    await this.categoryRepository.findCategoryByName(
+                        eventDetails.category,
+                        {
+                            id: true,
+                        },
+                    );
 
-        const categoryEntity = await this.categoryRepository.findCategoryByName(
-            eventDetails.category,
-            {
-                id: true,
-                name: true,
-            },
-        );
+                if (categoryEntity == null) {
+                    issues.push({
+                        issue: 'category not found',
+                        error: `category with name ${eventDetails.category} does not exists`,
+                    });
+                }
 
-        if (!categoryEntity) {
-            success = false;
-            issues.push({
-                issue: 'category not found',
-                error: `category with name ${eventDetails.category} does not exists`,
+                return categoryEntity !== null;
+            })
+            .validateAsync(async (eventDetails, issues) => {
+                const otherEvent =
+                    await this.eventRepository.findEventByDateAndLocation(
+                        eventDetails.date,
+                        eventDetails.local,
+                        {
+                            id: true,
+                        },
+                    );
+
+                if (otherEvent !== null) {
+                    issues.push({
+                        issue: 'conflict between events',
+                        error: `there is already an event (id: ${otherEvent.id}) registered on the same date for that location`,
+                    });
+                }
+
+                return otherEvent === null;
             });
-        }
 
-        const otherEvent =
-            await this.eventRepository.findEventByDateAndLocation(
-                eventDetails.date,
-                eventDetails.local,
-                {
-                    id: true,
-                },
-            );
-
-        if (otherEvent !== null) {
-            success = false;
-            issues.push({
-                issue: 'conflict between events',
-                error: `there is already an event (id: ${otherEvent.id}) registered on the same date for that location`,
-            });
-        }
-
-        return { success, issues };
+        return validator.executeAsync();
     }
 
     async getById(eventId) {
