@@ -86,8 +86,20 @@ export class EventService {
         const { eventName, category, cep, state, city, neighborhood, street } =
             filters;
 
+        let date = undefined;
+
+        if (filters.startDate) {
+            date = {
+                gte: new Date(filters.startDate),
+                lte: filters.endDate ? new Date(filters.endDate) : undefined,
+            };
+        } else if (filters.date) {
+            date = new Date(filters.date);
+        }
+
         const where = {
             name: eventName,
+            date: date,
             category: {
                 name: category,
             },
