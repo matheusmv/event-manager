@@ -83,41 +83,15 @@ export class EventService {
     }
 
     async getAll(filters) {
-        const { eventName, category, cep, state, city, neighborhood, street } =
-            filters;
-
-        let date = undefined;
-
-        if (filters.startDate) {
-            date = {
-                gte: new Date(filters.startDate),
-                lte: filters.endDate ? new Date(filters.endDate) : undefined,
-            };
-        } else if (filters.date) {
-            date = new Date(filters.date);
-        }
-
-        const where = {
-            name: eventName,
-            date: date,
-            category: {
-                name: category,
+        return this.eventRepository.findAllEvents(
+            buildWhereClauseFromFilters(filters),
+            {
+                id: true,
+                name: true,
+                description: true,
+                date: true,
             },
-            local: {
-                cep: cep,
-                state: state,
-                city: city,
-                neighborhood: neighborhood,
-                street: street,
-            },
-        };
-
-        return this.eventRepository.findAllEvents(where, {
-            id: true,
-            name: true,
-            description: true,
-            date: true,
-        });
+        );
     }
 
     async update(eventId, eventDetails) {
@@ -222,6 +196,37 @@ function selectEventWithCategoryNameAndLocationDetails() {
                 number: true,
                 complement: true,
             },
+        },
+    };
+}
+
+function buildWhereClauseFromFilters(filters) {
+    let date = undefined;
+
+    if (filters.startDate) {
+        date = {
+            gte: new Date(filters.startDate),
+            lte: filters.endDate ? new Date(filters.endDate) : undefined,
+        };
+    } else if (filters.date) {
+        date = new Date(filters.date);
+    }
+
+    const { eventName, category, cep, state, city, neighborhood, street } =
+        filters;
+
+    return {
+        name: eventName,
+        date: date,
+        category: {
+            name: category,
+        },
+        local: {
+            cep: cep,
+            state: state,
+            city: city,
+            neighborhood: neighborhood,
+            street: street,
         },
     };
 }
