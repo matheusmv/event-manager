@@ -7,7 +7,7 @@ export class CategoryService {
         throw new Error('not implemented');
     }
 
-    async getById(categoyId) {
+    async getById(categoryId) {
         throw new Error('not implemented');
     }
 
@@ -15,11 +15,11 @@ export class CategoryService {
         throw new Error('not implemented');
     }
 
-    async update(categoyId, name) {
+    async update(categoryId, name) {
         throw new Error('not implemented');
     }
 
-    async detele(categoyIdId) {
+    async delete(categoryId) {
         throw new Error('not implemented');
     }
 }

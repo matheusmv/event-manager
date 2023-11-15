@@ -16,7 +16,7 @@ export function getCategoryById(categoryService) {
     };
 }
 
-export function createCategory(CategoryService) {
+export function createCategory(categoryService) {
     return async (req, res) => {
         const categoryDetails = req.body;
 

@@ -19,7 +19,7 @@ export class EventService {
         throw new Error('not implemented');
     }
 
-    async detele(eventId) {
+    async delete(eventId) {
         throw new Error('not implemented');
     }
 }
