@@ -1,47 +1,47 @@
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
 }
 
 model Category {
-  id   String @id @default(uuid())
-  name String @unique
+    id   String @id @default(uuid())
+    name String @unique
 
-  events Event[]
+    events Event[]
 
-  @@map("tb_category")
+    @@map("tb_category")
 }
 
 model Local {
-  id           String  @id @default(uuid())
-  cep          String
-  state        String
-  city         String
-  neighborhood String
-  street       String
-  number       String
-  complement   String?
+    id           String  @id @default(uuid())
+    cep          String
+    state        String
+    city         String
+    neighborhood String
+    street       String
+    number       String
+    complement   String?
 
-  event Event?
+    event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+    eventId String @unique
 
-  @@map("tb_local")
+    @@map("tb_local")
 }
 
 model Event {
-  id          String   @id @default(uuid())
-  name        String
-  date        DateTime
-  description String
+    id          String   @id @default(uuid())
+    name        String
+    date        DateTime
+    description String
 
-  category   Category @relation(fields: [categoryId], references: [id])
-  categoryId String
+    category   Category @relation(fields: [categoryId], references: [id])
+    categoryId String
 
-  local   Local  @relation(fields: [localId], references: [id])
-  localId String @unique
+    local      Local?
 
-  @@map("tb_event")
+    @@map("tb_event")
 }
