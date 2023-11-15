@@ -83,11 +83,18 @@ export class EventService {
     }
 
     async getAll(filters) {
-        const { category } = filters;
+        const { category, cep, state, city, neighborhood, street } = filters;
 
         const where = {
             category: {
                 name: category,
+            },
+            local: {
+                cep: cep,
+                state: state,
+                city: city,
+                neighborhood: neighborhood,
+                street: street,
             },
         };
 
