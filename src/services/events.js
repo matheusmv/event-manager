@@ -1,6 +1,6 @@
 export class EventService {
-    constructor(prisma) {
-        this.prisma = prisma;
+    constructor(eventRepository) {
+        this.eventRepository = eventRepository;
     }
 
     async create(eventDetails) {
@@ -19,7 +19,7 @@ export class EventService {
         throw new Error('not implemented');
     }
 
-    async detele(eventId) {
+    async delete(eventId) {
         throw new Error('not implemented');
     }
 }

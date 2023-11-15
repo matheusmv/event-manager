@@ -1,5 +1,7 @@
 import prismaClient from '../db/index.js';
 
+import { CategoryRepository } from '../repositories/categories.js';
+
 import { CategoryService } from '../services/categories.js';
 
 import {
@@ -13,20 +15,12 @@ import {
 export function buildCategoryRoute(router) {
     const endPoint = '/api/v1/categories';
 
-    const categoryService = new CategoryService(prismaClient);
+    const categoryRepository = new CategoryRepository(prismaClient);
+    const categoryService = new CategoryService(categoryRepository);
 
-    // TODO: List all categories
     router.get(endPoint, getAllCategories(categoryService));
-
-    // TODO: Get by id
     router.get(`${endPoint}/:id`, getCategoryById(categoryService));
-
-    // TODO: Create category
     router.post(endPoint, createCategory(categoryService));
-
-    // TODO: Update category
     router.put(`${endPoint}/:id`, updateCategory(categoryService));
-
-    // TODO: Delete category
     router.delete(`${endPoint}/:id`, deleteCategory(categoryService));
 }
