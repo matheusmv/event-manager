@@ -7,10 +7,11 @@ export class StandardError extends Error {
         path = undefined,
         issues = undefined,
     ) {
-        super(message);
+        super();
         this.timestamp = timestamp;
         this.status = status;
         this.error = error;
+        this.message = message;
         this.path = path;
         this.issues = issues;
     }
@@ -30,6 +31,10 @@ export class StandardError extends Error {
 export class Errors {
     static notFound(message) {
         return StandardError.of(404, 'Object Not Found', message);
+    }
+
+    static badRequest(message) {
+        return StandardError.of(400, 'Bad Request', message);
     }
 
     static validation(message, issues) {
