@@ -1,6 +1,6 @@
 export class CategoryService {
-    constructor(prisma) {
-        this.prisma = prisma;
+    constructor(categoryRepository) {
+        this.categoryRepository = categoryRepository;
     }
 
     async create(name) {
