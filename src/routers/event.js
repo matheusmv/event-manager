@@ -1,5 +1,8 @@
 import prismaClient from '../db/index.js';
 
+import { EventRepository } from '../repositories/events.js';
+import { CategoryRepository } from '../repositories/categories.js';
+
 import { EventService } from '../services/events.js';
 
 import {
@@ -13,20 +16,13 @@ import {
 export function buildEventRoute(router) {
     const endPoint = '/api/v1/events';
 
-    const eventService = new EventService(prismaClient);
+    const eventRepository = new EventRepository(prismaClient);
+    const categoryRepository = new CategoryRepository(prismaClient);
+    const eventService = new EventService(eventRepository, categoryRepository);
 
-    // TODO: List all events
     router.get(endPoint, getAllEvents(eventService));
-
-    // TODO: Get by id
     router.get(`${endPoint}/:id`, getEventById(eventService));
-
-    // TODO: Create event
     router.post(endPoint, createEvent(eventService));
-
-    // TODO: Update event
     router.put(`${endPoint}/:id`, updateEvent(eventService));
-
-    // TODO: Delete event
     router.delete(`${endPoint}/:id`, deleteEvent(eventService));
 }

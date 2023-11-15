@@ -1,16 +1,12 @@
 import { Errors } from '../helpers/errors.js';
 
 export class CategoryService {
-    constructor(prisma) {
-        this.prisma = prisma;
+    constructor(categoryRepository) {
+        this.categoryRepository = categoryRepository;
     }
 
     async create(name) {
-        const category = await this.prisma.category.findFirst({
-            where: {
-                name,
-            },
-        });
+        const category = await this.categoryRepository.findCategoryByName(name);
 
         if (category) {
             throw Errors.badRequest(
@@ -18,24 +14,14 @@ export class CategoryService {
             );
         }
 
-        return this.prisma.category.create({
-            data: {
-                name,
-            },
+        return this.categoryRepository.saveCategory({
+            name,
         });
     }
 
     async getById(categoryId) {
-        return this.prisma.category
-            .findFirst({
-                where: {
-                    id: categoryId,
-                },
-                select: {
-                    id: true,
-                    name: true,
-                },
-            })
+        return this.categoryRepository
+            .findCategoryById(categoryId)
             .then((category) => {
                 if (!category) {
                     throw Errors.notFound(
@@ -48,20 +34,15 @@ export class CategoryService {
     }
 
     async getAll() {
-        return this.prisma.category.findMany({
-            select: {
-                id: true,
-                name: true,
-            },
+        return this.categoryRepository.findAllCategories({
+            id: true,
+            name: true,
         });
     }
 
     async update(categoryId, name) {
-        const category = await this.prisma.category.findFirst({
-            where: {
-                id: categoryId,
-            },
-        });
+        const category =
+            await this.categoryRepository.findCategoryById(categoryId);
 
         if (!category) {
             throw Errors.notFound(
@@ -69,22 +50,14 @@ export class CategoryService {
             );
         }
 
-        return this.prisma.category.update({
-            where: {
-                id: categoryId,
-            },
-            data: {
-                name,
-            },
+        return this.categoryRepository.updateCategory(categoryId, {
+            name,
         });
     }
 
     async delete(categoryId) {
-        const category = await this.prisma.category.findFirst({
-            where: {
-                id: categoryId,
-            },
-        });
+        const category =
+            await this.categoryRepository.findCategoryById(categoryId);
 
         if (!category) {
             throw Errors.notFound(
@@ -92,10 +65,6 @@ export class CategoryService {
             );
         }
 
-        return this.prisma.category.delete({
-            where: {
-                id: categoryId,
-            },
-        });
+        return this.categoryRepository.deteleCategory(categoryId);
     }
 }
