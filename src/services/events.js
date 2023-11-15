@@ -50,7 +50,7 @@ export class EventService {
                 },
             );
 
-        if (otherEvent) {
+        if (otherEvent !== null) {
             success = false;
             issues.push({
                 issue: 'conflict between events',
@@ -83,7 +83,73 @@ export class EventService {
     }
 
     async update(eventId, eventDetails) {
-        throw new Error('not implemented');
+        const event = this.eventRepository.findEventById(eventId, {
+            id: true,
+        });
+
+        if (!event) {
+            throw Errors.notFound(`event with id ${eventId} does not exists`);
+        }
+
+        // TODO: validate event fields
+
+        eventDetails.id = eventId;
+        eventDetails.date = eventDetails.date
+            ? new Date(eventDetails.date)
+            : event.date;
+
+        const { success, issues } =
+            await this.validateEventUpdate(eventDetails);
+        if (!success) {
+            throw Errors.validation('unable to update event', issues);
+        }
+
+        return this.eventRepository.updateEvent(eventId, eventDetails);
+    }
+
+    async validateEventUpdate(eventDetails) {
+        let success = true;
+        const issues = [];
+
+        if (eventDetails.category) {
+            const categoryEntity =
+                await this.categoryRepository.findCategoryByName(
+                    eventDetails.category,
+                    {
+                        id: true,
+                        name: true,
+                    },
+                );
+
+            if (!categoryEntity) {
+                success = false;
+                issues.push({
+                    issue: 'category not found',
+                    error: `category with name ${eventDetails.category} does not exists`,
+                });
+            }
+        }
+
+        if (eventDetails.local) {
+            const otherEvent =
+                await this.eventRepository.findEventByDateAndLocation(
+                    eventDetails.date,
+                    eventDetails.local,
+                    {
+                        id: true,
+                    },
+                );
+
+            if (otherEvent !== null && otherEvent.id !== eventDetails.id) {
+                success = false;
+                issues.push({
+                    issue: 'conflict between events',
+                    error: `there is already an event (id: ${otherEvent.id}) registered on the same date for that location`,
+                });
+            }
+        }
+
+        return { success, issues };
     }
 
     async detele(eventId) {

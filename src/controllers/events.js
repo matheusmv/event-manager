@@ -31,13 +31,14 @@ export function createEvent(eventService) {
 }
 
 export function updateEvent(eventService) {
-    return async (req, res) => {
+    return async (req, res, next) => {
         const { id } = req.params;
         const eventDetails = req.body;
 
-        // const event = await eventService.update(id, eventDetails);
-
-        return res.status(200).json({ id, ...eventDetails });
+        return eventService
+            .update(id, eventDetails)
+            .then((event) => HttpOk(res, event))
+            .catch((err) => next(err));
     };
 }
 

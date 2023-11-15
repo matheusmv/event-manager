@@ -95,12 +95,34 @@ export class EventRepository {
         });
     }
 
-    async updateEvent(eventId, data) {
+    async updateEvent(eventId, eventDetails) {
+        const { name, date, description, local } = eventDetails;
+
+        const category = eventDetails.category
+            ? { connect: { name: eventDetails.category } }
+            : undefined;
+
         return this.prisma.event.update({
             where: {
                 id: eventId,
             },
-            data: data,
+            data: {
+                name,
+                date,
+                description,
+                category,
+                local: {
+                    update: {
+                        cep: local ? local.cep : undefined,
+                        state: local ? local.state : undefined,
+                        city: local ? local.city : undefined,
+                        neighborhood: local ? local.neighborhood : undefined,
+                        street: local ? local.street : undefined,
+                        number: local ? local.number : undefined,
+                        complement: local ? local.complement : undefined,
+                    },
+                },
+            },
         });
     }
 
