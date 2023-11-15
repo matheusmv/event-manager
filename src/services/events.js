@@ -85,6 +85,7 @@ export class EventService {
     async getAll(filters) {
         return this.eventRepository.findAllEvents(
             buildWhereClauseFromFilters(filters),
+            buildOrderByClauseFromFilters(filters),
             {
                 id: true,
                 name: true,
@@ -229,4 +230,20 @@ function buildWhereClauseFromFilters(filters) {
             street: street,
         },
     };
+}
+
+function buildOrderByClauseFromFilters(filters) {
+    let orderBy = undefined;
+
+    if (filters.orderBy) {
+        orderBy = {
+            [filters.orderBy]: filters.order ? filters.order : 'asc',
+        };
+    } else {
+        orderBy = {
+            id: filters.order ? filters.order : 'asc',
+        };
+    }
+
+    return orderBy;
 }
