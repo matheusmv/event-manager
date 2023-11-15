@@ -88,8 +88,9 @@ export class EventRepository {
         });
     }
 
-    async findAllEvents(select = undefined) {
+    async findAllEvents(where = undefined, select = undefined) {
         return this.prisma.event.findMany({
+            where: where,
             select: select,
         });
     }

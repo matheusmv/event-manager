@@ -82,8 +82,16 @@ export class EventService {
             });
     }
 
-    async getAll() {
-        return this.eventRepository.findAllEvents({
+    async getAll(filters) {
+        const { category } = filters;
+
+        const where = {
+            category: {
+                name: category,
+            },
+        };
+
+        return this.eventRepository.findAllEvents(where, {
             id: true,
             name: true,
             description: true,

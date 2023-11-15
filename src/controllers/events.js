@@ -2,8 +2,10 @@ import { HttpCreated, HttpNoContent, HttpOk } from '../helpers/http.js';
 
 export function getAllEvents(eventService) {
     return async (req, res, next) => {
+        const filters = req.query;
+
         return eventService
-            .getAll()
+            .getAll(filters)
             .then((event) => HttpOk(res, event))
             .catch((err) => next(err));
     };
