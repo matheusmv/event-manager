@@ -1,4 +1,4 @@
-import { HttpOk } from '../helpers/http.js';
+import { HttpCreated, HttpOk } from '../helpers/http.js';
 
 export function getAllCategories(categoryService) {
     return async (req, res, next) => {
@@ -26,7 +26,7 @@ export function createCategory(categoryService) {
 
         return categoryService
             .create(name)
-            .then((category) => HttpOk(res, category))
+            .then((category) => HttpCreated(res, category))
             .catch((err) => next(err));
     };
 }
