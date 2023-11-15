@@ -82,7 +82,6 @@ export class EventRepository {
                     neighborhood: eventLocation.neighborhood,
                     street: eventLocation.street,
                     number: eventLocation.number,
-                    complement: eventLocation.complement,
                 },
             },
             select: select,
