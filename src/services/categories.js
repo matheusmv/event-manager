@@ -25,8 +25,26 @@ export class CategoryService {
         });
     }
 
-    async getById(categoyId) {
-        throw new Error('not implemented');
+    async getById(categoryId) {
+        return this.prisma.category
+            .findFirst({
+                where: {
+                    id: categoryId,
+                },
+                select: {
+                    id: true,
+                    name: true,
+                },
+            })
+            .then((category) => {
+                if (!category) {
+                    throw Errors.notFound(
+                        `category with id ${categoryId} does not exists`,
+                    );
+                }
+
+                return category;
+            });
     }
 
     async getAll() {

@@ -9,12 +9,13 @@ export function getAllCategories(categoryService) {
 }
 
 export function getCategoryById(categoryService) {
-    return async (req, res) => {
+    return async (req, res, next) => {
         const { id } = req.params;
 
-        // const category = await categoryService.getById(id);
-
-        return res.status(200).json({ id });
+        return categoryService
+            .getById(id)
+            .then((category) => HttpOk(res, category))
+            .catch((err) => next(err));
     };
 }
 
