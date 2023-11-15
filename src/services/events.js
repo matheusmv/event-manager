@@ -83,7 +83,12 @@ export class EventService {
     }
 
     async getAll() {
-        throw new Error('not implemented');
+        return this.eventRepository.findAllEvents({
+            id: true,
+            name: true,
+            description: true,
+            date: true,
+        });
     }
 
     async update(eventId, eventDetails) {
