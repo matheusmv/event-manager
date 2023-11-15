@@ -79,7 +79,23 @@ export class CategoryService {
         });
     }
 
-    async detele(categoyIdId) {
-        throw new Error('not implemented');
+    async delete(categoryId) {
+        const category = await this.prisma.category.findFirst({
+            where: {
+                id: categoryId,
+            },
+        });
+
+        if (!category) {
+            throw Errors.notFound(
+                `category with id ${categoryId} does not exists`,
+            );
+        }
+
+        return this.prisma.category.delete({
+            where: {
+                id: categoryId,
+            },
+        });
     }
 }

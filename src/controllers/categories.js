@@ -1,4 +1,4 @@
-import { HttpCreated, HttpOk } from '../helpers/http.js';
+import { HttpCreated, HttpNoContent, HttpOk } from '../helpers/http.js';
 
 export function getAllCategories(categoryService) {
     return async (req, res, next) => {
@@ -44,11 +44,12 @@ export function updateCategory(categoryService) {
 }
 
 export function deleteCategory(categoryService) {
-    return async (req, res) => {
+    return async (req, res, next) => {
         const { id } = req.params;
 
-        // const category = await categoryService.delete(id);
-
-        return res.status(204).json();
+        return categoryService
+            .delete(id)
+            .then(() => HttpNoContent(res))
+            .catch((err) => next(err));
     };
 }
