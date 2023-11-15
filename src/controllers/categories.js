@@ -1,10 +1,11 @@
 import { HttpOk } from '../helpers/http.js';
 
 export function getAllCategories(categoryService) {
-    return async (req, res) => {
-        // const categories = await categoryService.getAll();
-
-        return res.status(200).json({ categories: [] });
+    return async (req, res, next) => {
+        return categoryService
+            .getAll()
+            .then((categories) => HttpOk(res, categories))
+            .catch((err) => next(err));
     };
 }
 

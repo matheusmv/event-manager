@@ -48,7 +48,12 @@ export class CategoryService {
     }
 
     async getAll() {
-        throw new Error('not implemented');
+        return this.prisma.category.findMany({
+            select: {
+                id: true,
+                name: true,
+            },
+        });
     }
 
     async update(categoyId, name) {
