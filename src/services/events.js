@@ -1,6 +1,6 @@
 export class EventService {
-    constructor(prisma) {
-        this.prisma = prisma;
+    constructor(eventRepository) {
+        this.eventRepository = eventRepository;
     }
 
     async create(eventDetails) {
