@@ -1,3 +1,5 @@
+import { HttpOk } from '../helpers/http.js';
+
 export function getAllCategories(categoryService) {
     return async (req, res) => {
         // const categories = await categoryService.getAll();
@@ -16,13 +18,14 @@ export function getCategoryById(categoryService) {
     };
 }
 
-export function createCategory(CategoryService) {
-    return async (req, res) => {
-        const categoryDetails = req.body;
+export function createCategory(categoryService) {
+    return async (req, res, next) => {
+        const { name } = req.body;
 
-        // const category = await categoryService.create(categoryDetails);
-
-        return res.status(201).json(categoryDetails);
+        return categoryService
+            .create(name)
+            .then((category) => HttpOk(res, category))
+            .catch((err) => next(err));
     };
 }
 

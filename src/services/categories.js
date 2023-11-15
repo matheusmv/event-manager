@@ -1,10 +1,28 @@
+import { Errors } from '../helpers/errors.js';
+
 export class CategoryService {
     constructor(prisma) {
         this.prisma = prisma;
     }
 
     async create(name) {
-        throw new Error('not implemented');
+        const category = await this.prisma.category.findUnique({
+            where: {
+                name,
+            },
+        });
+
+        if (category) {
+            throw Errors.badRequest(
+                `category with name '${name}' already exists`,
+            );
+        }
+
+        return this.prisma.category.create({
+            data: {
+                name,
+            },
+        });
     }
 
     async getById(categoyId) {
