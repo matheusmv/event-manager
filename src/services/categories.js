@@ -6,7 +6,7 @@ export class CategoryService {
     }
 
     async create(name) {
-        const category = await this.prisma.category.findUnique({
+        const category = await this.prisma.category.findFirst({
             where: {
                 name,
             },
