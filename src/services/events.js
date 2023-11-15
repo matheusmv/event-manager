@@ -154,8 +154,16 @@ export class EventService {
         return validator.executeAsync();
     }
 
-    async detele(eventId) {
-        throw new Error('not implemented');
+    async delete(eventId) {
+        const event = await this.eventRepository.findEventById(eventId, {
+            id: true,
+        });
+
+        if (!event) {
+            throw Errors.notFound(`event with id ${eventId} does not exists`);
+        }
+
+        await this.eventRepository.deteleEvent(eventId);
     }
 }
 

@@ -1,4 +1,4 @@
-import { HttpCreated, HttpOk } from '../helpers/http.js';
+import { HttpCreated, HttpNoContent, HttpOk } from '../helpers/http.js';
 
 export function getAllEvents(eventService) {
     return async (req, res) => {
@@ -43,11 +43,12 @@ export function updateEvent(eventService) {
 }
 
 export function deleteEvent(eventService) {
-    return async (req, res) => {
+    return async (req, res, next) => {
         const { id } = req.params;
 
-        // const event = await eventService.delete(id);
-
-        return res.status(204).json();
+        return eventService
+            .delete(id)
+            .then(() => HttpNoContent(res))
+            .catch((err) => next(err));
     };
 }
