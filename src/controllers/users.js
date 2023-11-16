@@ -1,4 +1,4 @@
-import { HttpCreated } from '../helpers/http.js';
+import { HttpCreated, HttpOk } from '../helpers/http.js';
 
 export function getAllUsers(userService) {
     return async (req, res) => {
@@ -7,10 +7,13 @@ export function getAllUsers(userService) {
 }
 
 export function getUserById(userService) {
-    return async (req, res) => {
+    return async (req, res, next) => {
         const { id } = req.params;
 
-        return res.status(200).json({ id });
+        return userService
+            .getById(id)
+            .then((user) => HttpOk(res, user))
+            .catch((err) => next(err));
     };
 }
 

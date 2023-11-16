@@ -33,7 +33,17 @@ export class UserService {
     }
 
     async getById(userId) {
-        throw new Error('not implemented');
+        return this.userRepository
+            .findUserById(userId, { id: true, email: true, role: true })
+            .then((user) => {
+                if (!user) {
+                    throw Errors.notFound(
+                        `user with id ${userId} does not exists`,
+                    );
+                }
+
+                return user;
+            });
     }
 
     async getAll() {
