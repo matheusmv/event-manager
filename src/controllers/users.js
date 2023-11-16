@@ -1,8 +1,11 @@
 import { HttpCreated, HttpOk } from '../helpers/http.js';
 
 export function getAllUsers(userService) {
-    return async (req, res) => {
-        return res.status(200).json({ users: [] });
+    return async (req, res, next) => {
+        return userService
+            .getAll()
+            .then((users) => HttpOk(res, users))
+            .catch((err) => next(err));
     };
 }
 

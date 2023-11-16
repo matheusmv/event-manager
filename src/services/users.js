@@ -47,7 +47,11 @@ export class UserService {
     }
 
     async getAll() {
-        throw new Error('not implemented');
+        return this.userRepository.findAllUsers({
+            id: true,
+            email: true,
+            role: true,
+        });
     }
 
     async update(userId, userDetails) {
