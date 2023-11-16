@@ -147,6 +147,11 @@ function buildWhereClauseFromFilters(filters) {
             gte: new Date(filters.startDate),
             lte: filters.endDate ? new Date(filters.endDate) : undefined,
         };
+    } else if (filters.endDate) {
+        date = {
+            gte: filters.startDate ? new Date(filters.startDate) : new Date(),
+            lte: new Date(filters.endDate),
+        };
     } else if (filters.date) {
         date = new Date(filters.date);
     }
