@@ -1,3 +1,5 @@
+import { HttpCreated } from '../helpers/http.js';
+
 export function getAllUsers(userService) {
     return async (req, res) => {
         return res.status(200).json({ users: [] });
@@ -13,10 +15,13 @@ export function getUserById(userService) {
 }
 
 export function createUser(userService) {
-    return async (req, res) => {
+    return async (req, res, next) => {
         const userDetails = req.body;
 
-        return res.status(201).json(userDetails);
+        return userService
+            .create(userDetails)
+            .then((user) => HttpCreated(res, user))
+            .catch((err) => next(err));
     };
 }
 

@@ -3,9 +3,10 @@ export class UserRepository {
         this.prisma = prisma;
     }
 
-    async saveUser(data) {
+    async saveUser(data, select = undefined) {
         return this.prisma.user.create({
             data: data,
+            select: select,
         });
     }
 
@@ -13,6 +14,15 @@ export class UserRepository {
         return this.prisma.user.findFirst({
             where: {
                 id: userId,
+            },
+            select: select,
+        });
+    }
+
+    async findUserByEmail(userEmail, select = undefined) {
+        return this.prisma.user.findFirst({
+            where: {
+                email: userEmail,
             },
             select: select,
         });
