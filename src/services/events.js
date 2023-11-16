@@ -83,16 +83,12 @@ export class EventService {
     }
 
     async getAll(filters) {
-        return this.eventRepository.findAllEvents(
-            buildWhereClauseFromFilters(filters),
-            buildOrderByClauseFromFilters(filters),
-            {
-                id: true,
-                name: true,
-                description: true,
-                date: true,
-            },
-        );
+        return this.eventRepository.findAllEvents(filters, {
+            id: true,
+            name: true,
+            description: true,
+            date: true,
+        });
     }
 
     async update(eventId, eventDetails) {
@@ -199,51 +195,4 @@ function selectEventWithCategoryNameAndLocationDetails() {
             },
         },
     };
-}
-
-function buildWhereClauseFromFilters(filters) {
-    let date = undefined;
-
-    if (filters.startDate) {
-        date = {
-            gte: new Date(filters.startDate),
-            lte: filters.endDate ? new Date(filters.endDate) : undefined,
-        };
-    } else if (filters.date) {
-        date = new Date(filters.date);
-    }
-
-    const { eventName, category, cep, state, city, neighborhood, street } =
-        filters;
-
-    return {
-        name: eventName,
-        date: date,
-        category: {
-            name: category,
-        },
-        local: {
-            cep: cep,
-            state: state,
-            city: city,
-            neighborhood: neighborhood,
-            street: street,
-        },
-    };
-}
-
-function buildOrderByClauseFromFilters(filters) {
-    let orderBy = undefined;
-
-    if (filters.orderBy) {
-        orderBy = {
-            [filters.orderBy]: filters.order ? filters.order : 'asc',
-        };
-    } else {
-        orderBy = {
-            id: filters.order ? filters.order : 'asc',
-        };
-    }
-
-    return orderBy;
 }

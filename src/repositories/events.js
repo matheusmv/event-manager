@@ -88,14 +88,13 @@ export class EventRepository {
         });
     }
 
-    async findAllEvents(
-        where = undefined,
-        orderBy = undefined,
-        select = undefined,
-    ) {
+    async findAllEvents(filters, select = undefined) {
+        const whereClause = buildWhereClauseFromFilters(filters);
+        const orderByClause = buildOrderByClauseFromFilters(filters);
+
         return this.prisma.event.findMany({
-            where: where,
-            orderBy: orderBy,
+            where: whereClause,
+            orderBy: orderByClause,
             select: select,
         });
     }
@@ -138,4 +137,51 @@ export class EventRepository {
             },
         });
     }
+}
+
+function buildWhereClauseFromFilters(filters) {
+    let date = undefined;
+
+    if (filters.startDate) {
+        date = {
+            gte: new Date(filters.startDate),
+            lte: filters.endDate ? new Date(filters.endDate) : undefined,
+        };
+    } else if (filters.date) {
+        date = new Date(filters.date);
+    }
+
+    const { eventName, category, cep, state, city, neighborhood, street } =
+        filters;
+
+    return {
+        name: eventName,
+        date: date,
+        category: {
+            name: category,
+        },
+        local: {
+            cep: cep,
+            state: state,
+            city: city,
+            neighborhood: neighborhood,
+            street: street,
+        },
+    };
+}
+
+function buildOrderByClauseFromFilters(filters) {
+    let orderBy = undefined;
+
+    if (filters.orderBy) {
+        orderBy = {
+            [filters.orderBy]: filters.order ? filters.order : 'asc',
+        };
+    } else {
+        orderBy = {
+            id: filters.order ? filters.order : 'asc',
+        };
+    }
+
+    return orderBy;
 }
