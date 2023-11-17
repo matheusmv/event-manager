@@ -16,10 +16,12 @@ export class CategoryService {
     }
 
     async update(categoryId, name) {
-        throw errors.notfound(`category with id ${id} does not exists`);
+        return this.categoryRepository.updateCategory(categoryId, {
+            name,
+        });
     }
 
     async delete(categoryId) {
-        throw Errors.notFound(`category with id ${id} does not exists`);
+        await this.categoryRepository.deteleCategory(categoryId);
     }
 }
