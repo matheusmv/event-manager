@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { prettifyZodError } from '../helpers/zod.js';
 
 const credentialsValidator = z.object({
     email: z
@@ -16,16 +17,10 @@ const credentialsValidator = z.object({
 export async function validateCredentials(credentials) {
     return credentialsValidator.safeParseAsync(credentials).then((result) => {
         if (!result.success) {
-            const prettyIssues = result.error.issues.map((issue) => {
-                return {
-                    issue: `invalid ${
-                        issue.path[result.error.issues.length - 1]
-                    }`,
-                    error: issue.message,
-                };
-            });
-
-            return { success: result.success, error: prettyIssues };
+            return {
+                success: result.success,
+                error: prettifyZodError(result.error),
+            };
         }
 
         return result;

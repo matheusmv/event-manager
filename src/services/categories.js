@@ -1,4 +1,5 @@
 import { Errors } from '../helpers/errors.js';
+import { validateCategoryName } from '../validators/category.js';
 
 export class CategoryService {
     constructor(categoryRepository) {
@@ -6,6 +7,11 @@ export class CategoryService {
     }
 
     async create(name) {
+        const validation = await validateCategoryName(name);
+        if (!validation.success) {
+            throw Errors.validation('invalid category', validation.error);
+        }
+
         const category = await this.categoryRepository.findCategoryByName(name);
 
         if (category) {
@@ -41,6 +47,11 @@ export class CategoryService {
     }
 
     async update(categoryId, name) {
+        const validation = await validateCategoryName(name);
+        if (!validation.success) {
+            throw Errors.validation('invalid category', validation.error);
+        }
+
         const category =
             await this.categoryRepository.findCategoryById(categoryId);
 
