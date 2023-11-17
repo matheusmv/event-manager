@@ -32,7 +32,7 @@ export class UserService {
         );
     }
 
-    async getById(userId) {
+    async getById(userId, eventManager) {
         return this.userRepository
             .findUserById(userId, { id: true, email: true, role: true })
             .then((user) => {
@@ -40,6 +40,10 @@ export class UserService {
                     throw Errors.notFound(
                         `user with id ${userId} does not exists`,
                     );
+                }
+
+                if (!isAccountOwnerOrAdmin(user, eventManager)) {
+                    throw Errors.badRequest('Unable to retrieve resource');
                 }
 
                 return user;
@@ -54,11 +58,15 @@ export class UserService {
         });
     }
 
-    async update(userId, userDetails) {
+    async update(userId, eventManager, userDetails) {
         throw new Error('not implemented');
     }
 
-    async delete(userId) {
+    async delete(userId, eventManager) {
         throw new Error('not implemented');
     }
+}
+
+function isAccountOwnerOrAdmin(user, eventManager) {
+    return user.id === eventManager.id || eventManager.role === 'ADMIN';
 }

@@ -12,9 +12,10 @@ export function getAllUsers(userService) {
 export function getUserById(userService) {
     return async (req, res, next) => {
         const { id } = req.params;
+        const eventManager = req.user;
 
         return userService
-            .getById(id)
+            .getById(id, eventManager)
             .then((user) => HttpOk(res, user))
             .catch((err) => next(err));
     };
@@ -34,6 +35,7 @@ export function createUser(userService) {
 export function updateUser(userService) {
     return async (req, res) => {
         const { id } = req.params;
+        const eventManager = req.user;
         const userDetails = req.body;
 
         return res.status(200).json({ id, ...userDetails });
@@ -43,6 +45,7 @@ export function updateUser(userService) {
 export function deleteUser(userService) {
     return async (req, res) => {
         const { id } = req.params;
+        const eventManager = req.user;
 
         return res.status(204).json();
     };
