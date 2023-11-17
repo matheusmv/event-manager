@@ -24,10 +24,11 @@ export function getEventById(eventService) {
 
 export function createEvent(eventService) {
     return async (req, res, next) => {
+        const eventManager = req.user;
         const eventDetails = req.body;
 
         return eventService
-            .create(eventDetails)
+            .create(eventManager, eventDetails)
             .then((event) => HttpCreated(res, event))
             .catch((err) => next(err));
     };
@@ -36,10 +37,11 @@ export function createEvent(eventService) {
 export function updateEvent(eventService) {
     return async (req, res, next) => {
         const { id } = req.params;
+        const eventManager = req.user;
         const eventDetails = req.body;
 
         return eventService
-            .update(id, eventDetails)
+            .update(id, eventManager, eventDetails)
             .then((event) => HttpOk(res, event))
             .catch((err) => next(err));
     };
@@ -48,9 +50,10 @@ export function updateEvent(eventService) {
 export function deleteEvent(eventService) {
     return async (req, res, next) => {
         const { id } = req.params;
+        const eventManager = req.user;
 
         return eventService
-            .delete(id)
+            .delete(id, eventManager)
             .then(() => HttpNoContent(res))
             .catch((err) => next(err));
     };

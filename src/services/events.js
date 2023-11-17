@@ -7,9 +7,10 @@ export class EventService {
         this.categoryRepository = categoryRepository;
     }
 
-    async create(eventDetails) {
+    async create(eventManager, eventDetails) {
         // TODO: validate event fields
         eventDetails.date = new Date(eventDetails.date);
+        eventDetails.manager = eventManager.id;
 
         const { success, issues } =
             await this.validateEventCreation(eventDetails);
@@ -91,13 +92,18 @@ export class EventService {
         });
     }
 
-    async update(eventId, eventDetails) {
-        const event = this.eventRepository.findEventById(eventId, {
+    async update(eventId, eventManager, eventDetails) {
+        const event = await this.eventRepository.findEventById(eventId, {
             id: true,
+            manager: true,
         });
 
         if (!event) {
             throw Errors.notFound(`event with id ${eventId} does not exists`);
+        }
+
+        if (!isResourceOwnerOrAdmin(event, eventManager)) {
+            throw Errors.badRequest('cannot modify resource');
         }
 
         // TODO: validate event fields
@@ -159,13 +165,18 @@ export class EventService {
         return validator.executeAsync();
     }
 
-    async delete(eventId) {
+    async delete(eventId, eventManager) {
         const event = await this.eventRepository.findEventById(eventId, {
             id: true,
+            manager: true,
         });
 
         if (!event) {
             throw Errors.notFound(`event with id ${eventId} does not exists`);
+        }
+
+        if (!isResourceOwnerOrAdmin(event, eventManager)) {
+            throw Errors.badRequest('cannot modify resource');
         }
 
         await this.eventRepository.deteleEvent(eventId);
@@ -195,4 +206,10 @@ function selectEventWithCategoryNameAndLocationDetails() {
             },
         },
     };
+}
+
+function isResourceOwnerOrAdmin(event, eventManager) {
+    return (
+        event.manager.id === eventManager.id || eventManager.role === 'ADMIN'
+    );
 }
