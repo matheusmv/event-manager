@@ -16,10 +16,10 @@ export class CategoryService {
     }
 
     async update(categoryId, name) {
-        throw new Error('not implemented');
+        throw errors.notfound(`category with id ${id} does not exists`);
     }
 
     async delete(categoryId) {
-        throw new Error('not implemented');
+        throw Errors.notFound(`category with id ${id} does not exists`);
     }
 }
