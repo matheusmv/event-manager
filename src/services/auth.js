@@ -1,6 +1,7 @@
 import { Errors } from '../helpers/errors.js';
 import { Password } from '../helpers/password.js';
 import { JWT } from '../helpers/jwt.js';
+import { validateCredentials } from '../validators/auth.js';
 
 export class AuthenticationService {
     constructor(userRepository) {
@@ -8,8 +9,12 @@ export class AuthenticationService {
     }
 
     async authenticate(credentials) {
-        // TODO: validate credentials
-        const { email, password } = credentials;
+        const validation = await validateCredentials(credentials);
+        if (!validation.success) {
+            throw Errors.validation('invalid credentials', validation.error);
+        }
+
+        const { email, password } = validation.data;
 
         const user = await this.userRepository.findUserByEmail(email, {
             id: true,
