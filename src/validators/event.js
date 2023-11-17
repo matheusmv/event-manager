@@ -145,3 +145,100 @@ async function validateEventCreationDBConflicts(
 
     return validator.executeAsync();
 }
+
+const eventUpdateDetailsValidator = z.object({
+    name: eventNameValidator.optional(),
+    date: eventDateValidator.optional(),
+    description: eventDescriptionValidator.optional(),
+    category: eventCategoryValidator.optional(),
+    local: locationValidator.optional(),
+});
+
+export async function validateEventUpdate(
+    eventId,
+    eventDetails,
+    categoryRepository,
+    eventRepository,
+) {
+    return eventUpdateDetailsValidator
+        .safeParseAsync(eventDetails)
+        .then((result) => {
+            if (!result.success) {
+                return {
+                    success: result.success,
+                    error: prettifyZodError(result.error),
+                };
+            }
+
+            return result;
+        })
+        .then(async (eventUpdateDetailsValidatorResult) => {
+            if (!eventUpdateDetailsValidatorResult.success)
+                return eventUpdateDetailsValidatorResult;
+
+            const validation = await validateEventUpdateDBConflicts(
+                eventId,
+                eventUpdateDetailsValidatorResult.data,
+                categoryRepository,
+                eventRepository,
+            );
+
+            if (!validation.success) {
+                return {
+                    success: validation.success,
+                    error: validation.issues,
+                };
+            }
+
+            return eventUpdateDetailsValidatorResult;
+        });
+}
+
+async function validateEventUpdateDBConflicts(
+    eventId,
+    eventDetails,
+    categoryRepository,
+    eventRepository,
+) {
+    const validator = AsyncValidator.of(eventDetails)
+        .validateAsync(async (eventDetails, issues) => {
+            const categoryEntity = await categoryRepository.findCategoryByName(
+                eventDetails.category,
+                {
+                    id: true,
+                },
+            );
+
+            if (categoryEntity == null) {
+                issues.push({
+                    issue: 'category not found',
+                    error: `category with name ${eventDetails.category} does not exists`,
+                });
+            }
+
+            return categoryEntity !== null;
+        })
+        .validateAsync(async (eventDetails, issues) => {
+            const otherEvent = await eventRepository.findEventByDateAndLocation(
+                eventDetails.date,
+                eventDetails.local,
+                {
+                    id: true,
+                },
+            );
+
+            const hasConflicts =
+                otherEvent !== null && otherEvent.id !== eventId;
+
+            if (hasConflicts) {
+                issues.push({
+                    issue: 'conflict between events',
+                    error: `there is already an event (id: ${otherEvent.id}) registered on the same date for that location`,
+                });
+            }
+
+            return !hasConflicts;
+        });
+
+    return validator.executeAsync();
+}
