@@ -1,3 +1,7 @@
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 import express from 'express';
 import { getRouters } from './routers/index.js';
 import { globalErrorHandler } from './middlewares/errors.js';

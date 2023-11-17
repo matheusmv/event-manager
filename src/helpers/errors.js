@@ -37,6 +37,14 @@ export class Errors {
         return StandardError.of(400, 'Bad Request', message);
     }
 
+    static unauthorized(message) {
+        return StandardError.of(401, 'Unauthorized', message);
+    }
+
+    static forbidden(message) {
+        return StandardError.of(403, 'Forbidden', message);
+    }
+
     static validation(message, issues) {
         return StandardError.of(
             422,
