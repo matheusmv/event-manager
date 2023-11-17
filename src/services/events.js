@@ -1,5 +1,6 @@
 import { Errors } from '../helpers/errors.js';
 import { AsyncValidator } from '../helpers/validator.js';
+import { validateEventCreation } from '../validators/event.js';
 
 export class EventService {
     constructor(eventRepository, categoryRepository) {
@@ -8,62 +9,23 @@ export class EventService {
     }
 
     async create(eventManager, eventDetails) {
-        // TODO: validate event fields
-        eventDetails.date = new Date(eventDetails.date);
-        eventDetails.manager = eventManager.id;
-
-        const { success, issues } =
-            await this.validateEventCreation(eventDetails);
-        if (!success) {
-            throw Errors.validation('unable to register new event', issues);
+        const validation = await validateEventCreation(
+            eventDetails,
+            this.categoryRepository,
+            this.eventRepository,
+        );
+        if (!validation.success) {
+            throw Errors.validation(
+                'unable to register new event',
+                validation.error,
+            );
         }
 
+        validation.data.manager = eventManager.id;
+
         return this.eventRepository.saveEventWithCategoryAndLocation(
-            eventDetails,
+            validation.data,
         );
-    }
-
-    async validateEventCreation(eventDetails) {
-        const validator = AsyncValidator.of(eventDetails)
-            .validateAsync(async (eventDetails, issues) => {
-                const categoryEntity =
-                    await this.categoryRepository.findCategoryByName(
-                        eventDetails.category,
-                        {
-                            id: true,
-                        },
-                    );
-
-                if (categoryEntity == null) {
-                    issues.push({
-                        issue: 'category not found',
-                        error: `category with name ${eventDetails.category} does not exists`,
-                    });
-                }
-
-                return categoryEntity !== null;
-            })
-            .validateAsync(async (eventDetails, issues) => {
-                const otherEvent =
-                    await this.eventRepository.findEventByDateAndLocation(
-                        eventDetails.date,
-                        eventDetails.local,
-                        {
-                            id: true,
-                        },
-                    );
-
-                if (otherEvent !== null) {
-                    issues.push({
-                        issue: 'conflict between events',
-                        error: `there is already an event (id: ${otherEvent.id}) registered on the same date for that location`,
-                    });
-                }
-
-                return otherEvent === null;
-            });
-
-        return validator.executeAsync();
     }
 
     async getById(eventId) {
