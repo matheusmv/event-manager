@@ -1,4 +1,4 @@
-import { HttpCreated, HttpOk } from '../helpers/http.js';
+import { HttpCreated, HttpNotImplemented, HttpOk } from '../helpers/http.js';
 
 export function getAllUsers(userService) {
     return async (req, res, next) => {
@@ -38,7 +38,7 @@ export function updateUser(userService) {
         const eventManager = req.user;
         const userDetails = req.body;
 
-        return res.status(200).json({ id, ...userDetails });
+        return HttpNotImplemented(res);
     };
 }
 
@@ -47,6 +47,6 @@ export function deleteUser(userService) {
         const { id } = req.params;
         const eventManager = req.user;
 
-        return res.status(204).json();
+        return HttpNotImplemented(res);
     };
 }
