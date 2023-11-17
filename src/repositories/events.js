@@ -15,6 +15,7 @@ export class EventRepository {
             date,
             description,
             category,
+            manager,
             local: {
                 cep,
                 state,
@@ -33,6 +34,9 @@ export class EventRepository {
                 description,
                 category: {
                     connect: { name: category },
+                },
+                manager: {
+                    connect: { id: manager },
                 },
                 local: {
                     create: {
@@ -106,6 +110,10 @@ export class EventRepository {
             ? { connect: { name: eventDetails.category } }
             : undefined;
 
+        const manager = eventDetails.manager
+            ? { connect: { id: eventDetails.manager } }
+            : undefined;
+
         return this.prisma.event.update({
             where: {
                 id: eventId,
@@ -115,6 +123,7 @@ export class EventRepository {
                 date,
                 description,
                 category,
+                manager,
                 local: {
                     update: {
                         cep: local ? local.cep : undefined,
