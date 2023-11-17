@@ -1,5 +1,6 @@
 import { Errors } from '../helpers/errors.js';
 import { Password } from '../helpers/password.js';
+import { validateUserAccountCreationInfo } from '../validators/user.js';
 
 export class UserService {
     constructor(userRepository) {
@@ -7,8 +8,12 @@ export class UserService {
     }
 
     async create(userDetails) {
-        // TODO: validate user details
-        const { email, password } = userDetails;
+        const validation = await validateUserAccountCreationInfo(userDetails);
+        if (!validation.success) {
+            throw Errors.validation('invalid account info', validation.error);
+        }
+
+        const { email, password } = validation.data;
 
         const alreadyExists = await this.userRepository.findUserByEmail(email, {
             id: true,

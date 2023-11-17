@@ -1,17 +1,21 @@
 import { z } from 'zod';
 import { prettifyZodError } from '../helpers/zod.js';
 
+const emailValidator = z
+    .string({
+        required_error: 'email is required',
+        invalid_type_error: 'email must be a string',
+    })
+    .email({ message: 'invalid email address' });
+
+const passwordValidator = z.string({
+    required_error: 'password is required',
+    invalid_type_error: 'password must be a string',
+});
+
 const credentialsValidator = z.object({
-    email: z
-        .string({
-            required_error: 'email is required',
-            invalid_type_error: 'email must be a string',
-        })
-        .email({ message: 'invalid email address' }),
-    password: z.string({
-        required_error: 'password is required',
-        invalid_type_error: 'password must be a string',
-    }),
+    email: emailValidator,
+    password: passwordValidator,
 });
 
 export async function validateCredentials(credentials) {
