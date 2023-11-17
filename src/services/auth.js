@@ -29,4 +29,23 @@ export class AuthenticationService {
 
         return { accessToken: jwtToken };
     }
+
+    async getUser(token) {
+        const payload = JWT.verify(token);
+
+        if (!payload) {
+            throw Errors.unauthorized('invalid token');
+        }
+
+        const user = await this.userRepository.findUserById(payload.id, {
+            id: true,
+            role: true,
+        });
+
+        if (!user) {
+            throw Errors.unauthorized('invalid token');
+        }
+
+        return user;
+    }
 }
