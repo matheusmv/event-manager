@@ -20,6 +20,6 @@ export class EventService {
     }
 
     async delete(eventId) {
-        throw new Error('not implemented');
+        await this.eventRepository.deteleEvent(eventId);
     }
 }

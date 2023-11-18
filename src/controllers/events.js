@@ -41,7 +41,7 @@ export function deleteEvent(eventService) {
     return async (req, res) => {
         const { id } = req.params;
 
-        // const event = await eventService.delete(id);
+        await eventService.delete(id);
 
         return res.status(204).json();
     };
