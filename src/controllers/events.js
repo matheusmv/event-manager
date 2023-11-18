@@ -1,8 +1,8 @@
 export function getAllEvents(eventService) {
     return async (req, res) => {
-        // const events = await eventService.getAll();
+        const events = await eventService.getAll();
 
-        return res.status(200).json({ events: [] });
+        return res.status(200).json({ events });
     };
 }
 
@@ -18,11 +18,20 @@ export function getEventById(eventService) {
 
 export function createEvent(eventService) {
     return async (req, res) => {
-        const eventDetails = req.body;
+        try {
+            const { name, date, description, category, local } = req.body;
 
-        // const event = await eventService.create(eventDetails);
-
-        return res.status(200).json(eventDetails);
+            const eventDetails = await eventService.create({
+                name,
+                date,
+                description,
+                category,
+                local
+            });
+            return res.status(200).json(eventDetails);
+        } catch (error) {
+            return response.status(500).json({ error: 'An error occurred' });
+        }
     };
 }
 

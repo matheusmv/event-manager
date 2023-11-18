@@ -4,7 +4,19 @@ export class EventService {
     }
 
     async create(eventDetails) {
-        throw new Error('not implemented');
+        try {
+            eventDetails = await prisma.event.create({
+                data: {
+                    name: eventData.name,
+                    date: eventData.date,
+                    description: eventData.description,
+                    category: eventData.category,
+                    local: eventData.local,
+                },
+            });
+        } catch (error) {
+            throw new Error('An error occurred');
+        }
     }
 
     async getById(eventId) {
@@ -12,7 +24,7 @@ export class EventService {
     }
 
     async getAll() {
-        throw new Error('not implemented');
+        return await prisma.event.findMany();
     }
 
     async update(eventId, eventDetails) {
