@@ -1,6 +1,9 @@
 import { Errors } from '../helpers/errors.js';
 import { Password } from '../helpers/password.js';
-import { validateUserAccountCreationInfo } from '../validators/user.js';
+import {
+    validateUserAccountCreationInfo,
+    validateUserRole,
+} from '../validators/user.js';
 
 export class UserService {
     constructor(userRepository) {
@@ -69,6 +72,29 @@ export class UserService {
 
     async delete(userId, eventManager) {
         throw new Error('not implemented');
+    }
+
+    async setUserRole(userId, role) {
+        const validation = await validateUserRole(role);
+        if (!validation.success) {
+            throw Errors.validation('invalid role', validation.error);
+        }
+
+        const user = await this.userRepository.findUserById(userId, {
+            id: true,
+        });
+
+        if (!user) {
+            throw Errors.notFound(`user with id ${userId} does not exists`);
+        }
+
+        return this.userRepository.updateUser(
+            userId,
+            {
+                role,
+            },
+            { id: true, email: true, role: true },
+        );
     }
 }
 

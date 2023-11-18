@@ -35,3 +35,18 @@ export async function validateUserAccountCreationInfo(userDetails) {
             return result;
         });
 }
+
+const userRoleValidator = z.enum(['ADMIN', 'MANAGER', 'USER']);
+
+export async function validateUserRole(role) {
+    return userRoleValidator.safeParseAsync(role).then((result) => {
+        if (!result.success) {
+            return {
+                success: result.success,
+                error: prettifyZodError(result.error),
+            };
+        }
+
+        return result;
+    });
+}

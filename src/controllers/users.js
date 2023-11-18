@@ -50,3 +50,15 @@ export function deleteUser(userService) {
         return HttpNotImplemented(res);
     };
 }
+
+export function changeUserPrivileges(userService) {
+    return async (req, res, next) => {
+        const { id } = req.params;
+        const { role } = req.body;
+
+        return userService
+            .setUserRole(id, role)
+            .then((user) => HttpOk(res, user))
+            .catch((err) => next(err));
+    };
+}

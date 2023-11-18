@@ -12,6 +12,7 @@ import {
 import { UserService } from '../services/users.js';
 
 import {
+    changeUserPrivileges,
     createUser,
     deleteUser,
     getAllUsers,
@@ -47,5 +48,11 @@ export function buildUserRoute(router) {
         `${endPoint}/:id`,
         ensureAuthentication(authService),
         deleteUser(userService),
+    );
+    router.put(
+        `${endPoint}/:id/role`,
+        ensureAuthentication(authService),
+        ensureAuthorization(['ADMIN']),
+        changeUserPrivileges(userService),
     );
 }
