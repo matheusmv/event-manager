@@ -8,7 +8,7 @@ export class EventService {
     }
 
     async getById(eventId) {
-        throw new Error('not implemented');
+        return this.eventRepository.findEventById(eventId);
     }
 
     async getAll() {
