@@ -3,7 +3,7 @@ export class EventService {
         this.eventRepository = eventRepository;
     }
 
-    async create(eventDetails) {
+    async create(eventDetails) {    
         throw new Error('not implemented');
     }
 
@@ -16,7 +16,7 @@ export class EventService {
     }
 
     async update(eventId, eventDetails) {
-        throw new Error('not implemented');
+        return this.eventRepository.updateEvent(eventId, eventDetails);
     }
 
     async delete(eventId) {
