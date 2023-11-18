@@ -3,6 +3,7 @@ import {
     validateEventCreation,
     validateEventUpdate,
 } from '../validators/event.js';
+import { validateEventSearchFilters } from '../validators/searchFilters.js';
 
 export class EventService {
     constructor(eventRepository, categoryRepository) {
@@ -48,7 +49,15 @@ export class EventService {
     }
 
     async getAll(filters) {
-        return this.eventRepository.findAllEvents(filters, {
+        const validation = await validateEventSearchFilters(filters);
+        if (!validation.success) {
+            throw Errors.validation(
+                'invalid filter query params',
+                validation.error,
+            );
+        }
+
+        return this.eventRepository.findAllEvents(validation.data, {
             id: true,
             name: true,
             description: true,

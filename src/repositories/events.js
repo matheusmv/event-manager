@@ -1,3 +1,5 @@
+import { today } from '../helpers/date.js';
+
 export class EventRepository {
     constructor(prisma) {
         this.prisma = prisma;
@@ -153,16 +155,16 @@ function buildWhereClauseFromFilters(filters) {
 
     if (filters.startDate) {
         date = {
-            gte: new Date(filters.startDate),
-            lte: filters.endDate ? new Date(filters.endDate) : undefined,
+            gte: filters.startDate,
+            lte: filters.endDate ? filters.endDate : undefined,
         };
     } else if (filters.endDate) {
         date = {
-            gte: filters.startDate ? new Date(filters.startDate) : new Date(),
-            lte: new Date(filters.endDate),
+            gte: filters.startDate ? filters.startDate : today(),
+            lte: filters.endDate,
         };
     } else if (filters.date) {
-        date = new Date(filters.date);
+        date = filters.date;
     }
 
     const { eventName, category, cep, state, city, neighborhood, street } =

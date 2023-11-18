@@ -4,7 +4,7 @@ import { prettifyZodError } from '../helpers/zod.js';
 import { today } from '../helpers/date.js';
 import { AsyncValidator } from '../helpers/validator.js';
 
-const eventNameValidator = z
+export const eventNameValidator = z
     .string({
         required_error: 'event name is required',
         invalid_type_error: 'event name must be a string',
@@ -47,7 +47,7 @@ const eventDescriptionValidator = z
     .trim()
     .min(1, { message: 'must provide a description of the event' });
 
-const eventCategoryValidator = z
+export const eventCategoryValidator = z
     .string({
         required_error: 'event category name is required',
         invalid_type_error: 'event category name must be a string',

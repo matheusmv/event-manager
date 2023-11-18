@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const cepValidator = z
+export const cepValidator = z
     .string({
         required_error: 'cep is required',
         invalid_type_error: 'cep must be a string',
@@ -10,7 +10,7 @@ const cepValidator = z
     })
     .transform((cep) => cep.replace('-', ''));
 
-const stateValidator = z
+export const stateValidator = z
     .string({
         required_error: 'state is required',
         invalid_type_error: 'state must be a string',
@@ -18,7 +18,7 @@ const stateValidator = z
     .trim()
     .min(2, { message: 'state must be 2 or more characters long' });
 
-const cityValidator = z
+export const cityValidator = z
     .string({
         required_error: 'city is required',
         invalid_type_error: 'city must be a string',
@@ -26,7 +26,7 @@ const cityValidator = z
     .trim()
     .min(1, { message: 'state must be 1 or more characters long' });
 
-const neighborhoodValidator = z
+export const neighborhoodValidator = z
     .string({
         required_error: 'neighborhood is required',
         invalid_type_error: 'neighborhood must be a string',
@@ -34,7 +34,7 @@ const neighborhoodValidator = z
     .trim()
     .min(1, { message: 'neighborhood must be 1 or more characters long' });
 
-const streetValidator = z
+export const streetValidator = z
     .string({
         required_error: 'street is required',
         invalid_type_error: 'street must be a string',
@@ -42,7 +42,7 @@ const streetValidator = z
     .trim()
     .min(1, { message: 'street must be 1 or more characters long' });
 
-const numberValidator = z
+export const numberValidator = z
     .string({
         required_error: 'number is required',
         invalid_type_error: 'number must be a string',
