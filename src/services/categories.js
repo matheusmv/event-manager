@@ -8,7 +8,7 @@ export class CategoryService {
     }
 
     async getById(categoryId) {
-        throw new Error('not implemented');
+        return this.categoryRepository.findCategoryById(categoryId);
     }
 
     async getAll() {
