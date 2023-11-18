@@ -18,11 +18,11 @@ export function getCategoryById(categoryService) {
 
 export function createCategory(categoryService) {
     return async (req, res) => {
-        const categoryDetails = req.body;
+        const { name } = req.body;
 
-        // const category = await categoryService.create(categoryDetails);
+        const category = await categoryService.create(name);
 
-        return res.status(201).json(categoryDetails);
+        return res.status(201).json(category);
     };
 }
 

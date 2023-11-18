@@ -4,7 +4,7 @@ export class CategoryService {
     }
 
     async create(name) {
-        throw new Error('not implemented');
+        return await this.categoryRepository.saveCategory({ name });
     }
 
     async getById(categoryId) {
