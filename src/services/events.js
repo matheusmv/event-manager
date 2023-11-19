@@ -1,0 +1,37 @@
+export class EventService {
+    constructor(eventRepository) {
+        this.eventRepository = eventRepository;
+    }
+
+    async create(eventDetails) {
+        try {
+            eventDetails = await prisma.event.create({
+                data: {
+                    name: eventData.name,
+                    date: eventData.date,
+                    description: eventData.description,
+                    category: eventData.category,
+                    local: eventData.local,
+                },
+            });
+        } catch (error) {
+            throw new Error('An error occurred');
+        }
+    }
+
+    async getById(eventId) {
+        return this.eventRepository.findEventById(eventId);
+    }
+
+    async getAll() {
+        return await prisma.event.findMany();
+    }
+
+    async update(eventId, eventDetails) {
+        return this.eventRepository.updateEvent(eventId, eventDetails);
+    }
+
+    async delete(eventId) {
+        await this.eventRepository.deteleEvent(eventId);
+    }
+}
