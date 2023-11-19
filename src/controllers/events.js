@@ -1,57 +1,60 @@
-export function getAllEvents(eventService) {
-    return async (req, res) => {
-        const events = await eventService.getAll();
+import { HttpCreated, HttpNoContent, HttpOk } from '../helpers/http.js';
 
-        return res.status(200).json({ events });
+export function getAllEvents(eventService) {
+    return async (req, res, next) => {
+        const filters = req.query;
+
+        return eventService
+            .getAll(filters)
+            .then((event) => HttpOk(res, event))
+            .catch((err) => next(err));
     };
 }
 
 export function getEventById(eventService) {
-    return async (req, res) => {
+    return async (req, res, next) => {
         const { id } = req.params;
 
-        const event = await eventService.getById(id);
-
-        return res.status(200).json(event);
+        return eventService
+            .getById(id)
+            .then((event) => HttpOk(res, event))
+            .catch((err) => next(err));
     };
 }
 
 export function createEvent(eventService) {
-    return async (req, res) => {
-        try {
-            const { name, date, description, category, local } = req.body;
+    return async (req, res, next) => {
+        const eventManager = req.user;
+        const eventDetails = req.body;
 
-            const eventDetails = await eventService.create({
-                name,
-                date,
-                description,
-                category,
-                local
-            });
-            return res.status(200).json(eventDetails);
-        } catch (error) {
-            return response.status(500).json({ error: 'An error occurred' });
-        }
+        return eventService
+            .create(eventManager, eventDetails)
+            .then((event) => HttpCreated(res, event))
+            .catch((err) => next(err));
     };
 }
 
 export function updateEvent(eventService) {
-    return async (req, res) => {
+    return async (req, res, next) => {
         const { id } = req.params;
+        const eventManager = req.user;
         const eventDetails = req.body;
 
-        const event = await eventService.update(id, eventDetails);
-
-        return res.status(200).json(event);
+        return eventService
+            .update(id, eventManager, eventDetails)
+            .then((event) => HttpOk(res, event))
+            .catch((err) => next(err));
     };
 }
 
 export function deleteEvent(eventService) {
-    return async (req, res) => {
+    return async (req, res, next) => {
         const { id } = req.params;
+        const eventManager = req.user;
 
-        await eventService.delete(id);
-
-        return res.status(204).json();
+        return eventService
+            .delete(id, eventManager)
+            .then(() => HttpNoContent(res))
+            .catch((err) => next(err));
     };
 }
