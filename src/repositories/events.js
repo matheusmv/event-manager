@@ -1,3 +1,5 @@
+import { today } from '../helpers/date.js';
+
 export class EventRepository {
     constructor(prisma) {
         this.prisma = prisma;
@@ -15,6 +17,7 @@ export class EventRepository {
             date,
             description,
             category,
+            manager,
             local: {
                 cep,
                 state,
@@ -33,6 +36,9 @@ export class EventRepository {
                 description,
                 category: {
                     connect: { name: category },
+                },
+                manager: {
+                    connect: { id: manager },
                 },
                 local: {
                     create: {
@@ -88,8 +94,13 @@ export class EventRepository {
         });
     }
 
-    async findAllEvents(select = undefined) {
+    async findAllEvents(filters, select = undefined) {
+        const whereClause = buildWhereClauseFromFilters(filters);
+        const orderByClause = buildOrderByClauseFromFilters(filters);
+
         return this.prisma.event.findMany({
+            where: whereClause,
+            orderBy: orderByClause,
             select: select,
         });
     }
@@ -101,6 +112,10 @@ export class EventRepository {
             ? { connect: { name: eventDetails.category } }
             : undefined;
 
+        const manager = eventDetails.manager
+            ? { connect: { id: eventDetails.manager } }
+            : undefined;
+
         return this.prisma.event.update({
             where: {
                 id: eventId,
@@ -110,6 +125,7 @@ export class EventRepository {
                 date,
                 description,
                 category,
+                manager,
                 local: {
                     update: {
                         cep: local ? local.cep : undefined,
@@ -132,4 +148,56 @@ export class EventRepository {
             },
         });
     }
+}
+
+function buildWhereClauseFromFilters(filters) {
+    let date = undefined;
+
+    if (filters.startDate) {
+        date = {
+            gte: filters.startDate,
+            lte: filters.endDate ? filters.endDate : undefined,
+        };
+    } else if (filters.endDate) {
+        date = {
+            gte: filters.startDate ? filters.startDate : today(),
+            lte: filters.endDate,
+        };
+    } else if (filters.date) {
+        date = filters.date;
+    }
+
+    const { eventName, category, cep, state, city, neighborhood, street } =
+        filters;
+
+    return {
+        name: eventName,
+        date: date,
+        category: {
+            name: category,
+        },
+        local: {
+            cep: cep,
+            state: state,
+            city: city,
+            neighborhood: neighborhood,
+            street: street,
+        },
+    };
+}
+
+function buildOrderByClauseFromFilters(filters) {
+    let orderBy = undefined;
+
+    if (filters.orderBy) {
+        orderBy = {
+            [filters.orderBy]: filters.order ? filters.order : 'asc',
+        };
+    } else {
+        orderBy = {
+            id: filters.order ? filters.order : 'asc',
+        };
+    }
+
+    return orderBy;
 }
