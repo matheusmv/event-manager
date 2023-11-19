@@ -3,16 +3,28 @@ export class EventService {
         this.eventRepository = eventRepository;
     }
 
-    async create(eventDetails) {    
-        throw new Error('not implemented');
+    async create(eventDetails) {
+        try {
+            eventDetails = await prisma.event.create({
+                data: {
+                    name: eventData.name,
+                    date: eventData.date,
+                    description: eventData.description,
+                    category: eventData.category,
+                    local: eventData.local,
+                },
+            });
+        } catch (error) {
+            throw new Error('An error occurred');
+        }
     }
 
     async getById(eventId) {
-        throw new Error('not implemented');
+        return this.eventRepository.findEventById(eventId);
     }
 
     async getAll() {
-        throw new Error('not implemented');
+        return await prisma.event.findMany();
     }
 
     async update(eventId, eventDetails) {

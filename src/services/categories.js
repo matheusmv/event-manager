@@ -4,22 +4,24 @@ export class CategoryService {
     }
 
     async create(name) {
-        throw new Error('not implemented');
+        return await this.categoryRepository.saveCategory({ name });
     }
 
     async getById(categoryId) {
-        throw new Error('not implemented');
+        return this.categoryRepository.findCategoryById(categoryId);
     }
 
     async getAll() {
-        throw new Error('not implemented');
+        return await this.categoryRepository.findAllCategories();
     }
 
     async update(categoryId, name) {
-        throw new Error('not implemented');
+        return this.categoryRepository.updateCategory(categoryId, {
+            name,
+        });
     }
 
     async delete(categoryId) {
-        throw new Error('not implemented');
+        await this.categoryRepository.deteleCategory(categoryId);
     }
 }
