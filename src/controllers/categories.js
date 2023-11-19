@@ -1,8 +1,8 @@
 export function getAllCategories(categoryService) {
     return async (req, res) => {
-        // const categories = await categoryService.getAll();
+        const categories = await categoryService.getAll();
 
-        return res.status(200).json({ categories: [] });
+        return res.status(200).json({ categories });
     };
 }
 

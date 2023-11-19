@@ -12,7 +12,7 @@ export class CategoryService {
     }
 
     async getAll() {
-        throw new Error('not implemented');
+        return await this.categoryRepository.findAllCategories();
     }
 
     async update(categoryId, name) {
