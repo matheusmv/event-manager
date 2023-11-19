@@ -40,9 +40,9 @@ export function updateEvent(eventService) {
         const { id } = req.params;
         const eventDetails = req.body;
 
-        // const event = await eventService.update(id, eventDetails);
+        const event = await eventService.update(id, eventDetails);
 
-        return res.status(200).json({ id, ...eventDetails });
+        return res.status(200).json(event);
     };
 }
 
@@ -50,7 +50,7 @@ export function deleteEvent(eventService) {
     return async (req, res) => {
         const { id } = req.params;
 
-        // const event = await eventService.delete(id);
+        await eventService.delete(id);
 
         return res.status(204).json();
     };
