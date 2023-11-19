@@ -10,9 +10,9 @@ export function getCategoryById(categoryService) {
     return async (req, res) => {
         const { id } = req.params;
 
-        // const category = await categoryService.getById(id);
+        const category = await categoryService.getById(id);
 
-        return res.status(200).json({ id });
+        return res.status(200).json(category);
     };
 }
 

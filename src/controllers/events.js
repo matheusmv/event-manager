@@ -10,9 +10,9 @@ export function getEventById(eventService) {
     return async (req, res) => {
         const { id } = req.params;
 
-        // const event = await eventService.getById(id);
+        const event = await eventService.getById(id);
 
-        return res.status(200).json({ id });
+        return res.status(200).json(event);
     };
 }
 
