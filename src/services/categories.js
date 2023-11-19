@@ -16,10 +16,12 @@ export class CategoryService {
     }
 
     async update(categoryId, name) {
-        throw new Error('not implemented');
+        return this.categoryRepository.updateCategory(categoryId, {
+            name,
+        });
     }
 
     async delete(categoryId) {
-        throw new Error('not implemented');
+        await this.categoryRepository.deteleCategory(categoryId);
     }
 }

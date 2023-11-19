@@ -29,11 +29,11 @@ export function createCategory(categoryService) {
 export function updateCategory(categoryService) {
     return async (req, res) => {
         const { id } = req.params;
-        const categoryDetails = req.body;
+        const { name } = req.body;
 
-        // const category = await categoryService.update(id, categoryDetails);
-
-        return res.status(200).json({ id, ...categoryDetails });
+        const category = await categoryService.update(id,name);
+    
+        return res.status(200).json(category);
     };
 }
 
@@ -41,8 +41,8 @@ export function deleteCategory(categoryService) {
     return async (req, res) => {
         const { id } = req.params;
 
-        // const category = await categoryService.delete(id);
-
+        await categoryService.delete(id);
+        
         return res.status(204).json();
     };
 }
