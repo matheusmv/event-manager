@@ -294,6 +294,31 @@ locais e datas.
      | **400** | Requisição contém valores inválidos |
      | **422** | Requisição contém valores inválidos |
 
+ - Login
+
+   - método HTTP: **POST**
+
+   - endpoint:
+
+         /login
+
+   - formato da requisição:
+
+     ```json
+     {
+        "email": "user@email.com",
+        "password": "12345"
+     }
+     ```
+
+   - retorno:
+
+     | Status  | Resultado |
+     |:-------:|:---------:|
+     | **200** | Operação bem sucedida               |
+     | **401** | Requisição contém valores inválidos |
+     | **422** | Requisição contém valores inválidos |
+
  - Buscar usuário cadastrado
 
    - método HTTP: **GET**
