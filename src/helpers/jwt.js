@@ -1,9 +1,10 @@
 import jwt from 'jsonwebtoken';
 
 import { Errors } from '../helpers/errors.js';
+import { config } from '../env.js';
 
-const secret = process.env.TOKEN_SECRET;
-const expiration = process.env.TOKEN_EXPIRATION;
+const secret = config.security.jwt.secret;
+const expiration = config.security.jwt.expiration;
 
 export class JWT {
     static generate(payload) {

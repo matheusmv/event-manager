@@ -1,7 +1,8 @@
 import { PrismaClient } from '@prisma/client';
+import { config } from '../env.js';
 
 const prismaClient = new PrismaClient({
-    log: ['error', 'info', 'query', 'warn'],
+    log: config.db.prisma.log,
 });
 
 export default prismaClient;
