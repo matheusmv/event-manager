@@ -12,9 +12,20 @@ function getPrismaLogger() {
     return ['error'];
 }
 
+function getMorganLogger() {
+    if (env === 'development') {
+        return 'dev';
+    }
+
+    return 'tiny';
+}
+
 const config = {
     env: env,
     port: process.env.PORT || 3000,
+    logger: {
+        morgan: getMorganLogger(),
+    },
     db: {
         prisma: {
             log: getPrismaLogger(),
