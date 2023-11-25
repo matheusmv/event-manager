@@ -23,6 +23,10 @@ function getMorganLogger() {
 const config = {
     env: env,
     port: process.env.PORT || 3000,
+    admin: {
+        email: process.env.DEFAULT_ADMIN_EMAIL || 'root@root.com',
+        password: process.env.DEFAULT_ADMIN_PASSWORD || 'root',
+    },
     logger: {
         morgan: getMorganLogger(),
     },
