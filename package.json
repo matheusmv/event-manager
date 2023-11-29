@@ -7,6 +7,7 @@
   "scripts": {
     "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint . --fix",
+    "prisma:seed": "npx prisma db seed",
     "prisma:client": "npx prisma generate",
     "prisma:migrate": "npx prisma migrate dev",
     "migrate": "npm run prisma:migrate && npm run prisma:client",
@@ -20,6 +21,7 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
     "prisma": "^5.5.2",
     "zod": "^3.22.4"
   },
@@ -32,6 +34,7 @@
     "prettier": "^3.1.0"
   },
   "prisma": {
-    "schema": "./src/db/prisma/schema.prisma"
+    "schema": "./src/db/prisma/schema.prisma",
+    "seed": "node ./src/db/prisma/seed.js"
   }
 }
