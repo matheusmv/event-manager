@@ -101,6 +101,29 @@ locais e datas.
      | Ordernar por       | **orderBy**      | string | /events?orderBy=date         |
      | Orderm (asc, desc) | **order**        | string | /events?order=desc           |
 
+ - Listar eventos com paginação
+
+   - método HTTP: **GET**
+
+   - endpoint:
+
+         /api/v1/events/page
+
+   - retorno:
+
+     | Status  | Resultado |
+     |:-------:|:---------:|
+     | **200** | Recursos obtidos com sucesso |
+
+   - parâmetros de paginação:
+
+     | Opção       | Parâmetro | Tipo   | Exemplo  |
+     |:-----------:|:---------:|:------:|:--------:|
+     | página      | **page**  | number | /events/page?page=1  |
+     | quantidade  | **size**  | number | /events/size?size=10 |
+
+   - *Obs.: todos os parâmetros de filtro/pesquisa podem ser aplicados*
+
  - Atualizar evento
 
    - método HTTP: **PUT**
