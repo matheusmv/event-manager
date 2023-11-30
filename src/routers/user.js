@@ -9,6 +9,8 @@ import {
     ensureAuthorization,
 } from '../middlewares/auth.js';
 
+import { role } from '../helpers/auth.js';
+
 import { UserService } from '../services/users.js';
 
 import {
@@ -30,7 +32,7 @@ export function buildUserRoute(router) {
     router.get(
         endPoint,
         ensureAuthentication(authService),
-        ensureAuthorization(['ADMIN']),
+        ensureAuthorization([role.ADMIN]),
         getAllUsers(userService),
     );
     router.get(
@@ -52,7 +54,7 @@ export function buildUserRoute(router) {
     router.put(
         `${endPoint}/:id/role`,
         ensureAuthentication(authService),
-        ensureAuthorization(['ADMIN']),
+        ensureAuthorization([role.ADMIN]),
         changeUserPrivileges(userService),
     );
 }

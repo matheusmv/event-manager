@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { prettifyZodError } from '../helpers/zod.js';
+import { role } from '../helpers/auth.js';
 
 const emailValidator = z
     .string({
@@ -36,7 +37,7 @@ export async function validateUserAccountCreationInfo(userDetails) {
         });
 }
 
-const userRoleValidator = z.enum(['ADMIN', 'MANAGER', 'USER']);
+const userRoleValidator = z.enum([role.ADMIN, role.MANAGER, role.USER]);
 
 export async function validateUserRole(role) {
     return userRoleValidator.safeParseAsync(role).then((result) => {
