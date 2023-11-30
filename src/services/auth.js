@@ -2,6 +2,7 @@ import { Errors } from '../helpers/errors.js';
 import { Password } from '../helpers/password.js';
 import { JWT } from '../helpers/jwt.js';
 import { validateCredentials } from '../validators/auth.js';
+import { buildDTOWith } from '../helpers/dto.js';
 
 export class AuthenticationService {
     constructor(userRepository) {
@@ -18,7 +19,9 @@ export class AuthenticationService {
 
         const user = await this.userRepository.findUserByEmail(email, {
             id: true,
+            email: true,
             password: true,
+            role: true,
         });
 
         if (!user) {
@@ -32,7 +35,10 @@ export class AuthenticationService {
 
         const jwtToken = JWT.generate({ id: user.id });
 
-        return { accessToken: jwtToken };
+        return {
+            accessToken: jwtToken,
+            user: buildDTOWith(user, ['id', 'email', 'role']),
+        };
     }
 
     async getUser(token) {

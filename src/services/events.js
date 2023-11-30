@@ -62,6 +62,7 @@ export class EventService {
             name: true,
             description: true,
             date: true,
+            category: true,
         });
     }
 

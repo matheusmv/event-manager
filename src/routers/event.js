@@ -9,6 +9,8 @@ import {
     ensureAuthorization,
 } from '../middlewares/auth.js';
 
+import { role } from '../helpers/auth.js';
+
 import { EventRepository } from '../repositories/events.js';
 
 import { CategoryRepository } from '../repositories/categories.js';
@@ -38,19 +40,19 @@ export function buildEventRoute(router) {
     router.post(
         endPoint,
         ensureAuthentication(authService),
-        ensureAuthorization(['ADMIN', 'MANAGER']),
+        ensureAuthorization([role.ADMIN, role.MANAGER]),
         createEvent(eventService),
     );
     router.put(
         `${endPoint}/:id`,
         ensureAuthentication(authService),
-        ensureAuthorization(['ADMIN', 'MANAGER']),
+        ensureAuthorization([role.ADMIN, role.MANAGER]),
         updateEvent(eventService),
     );
     router.delete(
         `${endPoint}/:id`,
         ensureAuthentication(authService),
-        ensureAuthorization(['ADMIN', 'MANAGER']),
+        ensureAuthorization([role.ADMIN, role.MANAGER]),
         deleteEvent(eventService),
     );
 }
