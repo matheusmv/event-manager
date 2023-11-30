@@ -319,6 +319,22 @@ locais e datas.
      | **401** | Requisição contém valores inválidos |
      | **422** | Requisição contém valores inválidos |
 
+ - Buscar informações do usuário autenticado
+
+   - método HTTP: **GET**
+
+   - endpoint:
+
+         /api/v1/users/me
+
+   - retorno:
+
+     | Status  | Resultado |
+     |:-------:|:---------:|
+     | **200** | Recurso encontrado          |
+     | **404** | Recurso não existe          |
+     | **401** | Recurso requer autenticação |
+
  - Buscar usuário cadastrado
 
    - método HTTP: **GET**

@@ -18,6 +18,7 @@ import {
     createUser,
     deleteUser,
     getAllUsers,
+    getAuthenticatedUser,
     getUserById,
     updateUser,
 } from '../controllers/users.js';
@@ -34,6 +35,11 @@ export function buildUserRoute(router) {
         ensureAuthentication(authService),
         ensureAuthorization([role.ADMIN]),
         getAllUsers(userService),
+    );
+    router.get(
+        `${endPoint}/me`,
+        ensureAuthentication(authService),
+        getAuthenticatedUser(userService),
     );
     router.get(
         `${endPoint}/:id`,

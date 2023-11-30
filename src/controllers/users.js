@@ -9,6 +9,17 @@ export function getAllUsers(userService) {
     };
 }
 
+export function getAuthenticatedUser(userService) {
+    return async (req, res, next) => {
+        const user = req.user;
+
+        return userService
+            .getById(user.id, user)
+            .then((user) => HttpOk(res, user))
+            .catch((err) => next(err));
+    };
+}
+
 export function getUserById(userService) {
     return async (req, res, next) => {
         const { id } = req.params;
