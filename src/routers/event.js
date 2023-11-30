@@ -22,6 +22,7 @@ import {
     deleteEvent,
     getAllEvents,
     getEventById,
+    getEventsPage,
     updateEvent,
 } from '../controllers/events.js';
 
@@ -36,6 +37,7 @@ export function buildEventRoute(router) {
     const eventService = new EventService(eventRepository, categoryRepository);
 
     router.get(endPoint, getAllEvents(eventService));
+    router.get(`${endPoint}/page`, getEventsPage(eventService));
     router.get(`${endPoint}/:id`, getEventById(eventService));
     router.post(
         endPoint,

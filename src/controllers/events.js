@@ -11,6 +11,17 @@ export function getAllEvents(eventService) {
     };
 }
 
+export function getEventsPage(eventService) {
+    return async (req, res, next) => {
+        const { size, page, ...filters } = req.query;
+
+        return eventService
+            .getPage(size, page, filters)
+            .then((event) => HttpOk(res, event))
+            .catch((err) => next(err));
+    };
+}
+
 export function getEventById(eventService) {
     return async (req, res, next) => {
         const { id } = req.params;
