@@ -1,4 +1,5 @@
 import { today } from '../helpers/date.js';
+import { DEFAULT_PAGE_SIZE, FIRST_PAGE } from '../services/events.js';
 
 export class EventRepository {
     constructor(prisma) {
@@ -105,6 +106,35 @@ export class EventRepository {
         });
     }
 
+    async findAllEventsPaginated(filters, select = undefined, { size, page }) {
+        const whereClause = buildWhereClauseFromFilters(filters);
+        const orderByClause = buildOrderByClauseFromFilters(filters);
+        const { skip, take } = buildOffsetPagination(size, page);
+
+        const [events, total] = await this.prisma.$transaction([
+            this.prisma.event.findMany({
+                skip: skip,
+                take: take,
+                where: whereClause,
+                orderBy: orderByClause,
+                select: select,
+            }),
+            this.prisma.event.count({
+                where: whereClause,
+            }),
+        ]);
+
+        return {
+            events,
+            meta: {
+                itemsPerPage: parseInt(size) || DEFAULT_PAGE_SIZE,
+                totalItems: total,
+                currentPage: page,
+                totalPages: Math.ceil(total / size),
+            },
+        };
+    }
+
     async updateEvent(eventId, eventDetails) {
         const { name, date, description, local } = eventDetails;
 
@@ -171,7 +201,7 @@ function buildWhereClauseFromFilters(filters) {
         filters;
 
     return {
-        name: eventName,
+        name: { contains: eventName },
         date: date,
         category: {
             name: category,
@@ -200,4 +230,24 @@ function buildOrderByClauseFromFilters(filters) {
     }
 
     return orderBy;
+}
+
+function buildOffsetPagination(size, page) {
+    if (size !== undefined && typeof size !== 'number' && size !== '') {
+        size = parseInt(size) || DEFAULT_PAGE_SIZE;
+    }
+
+    if (page !== undefined && typeof page !== 'number' && page !== '') {
+        page = parseInt(page) || FIRST_PAGE;
+    }
+
+    size = size < 1 ? DEFAULT_PAGE_SIZE : size;
+    page = page < 1 ? FIRST_PAGE : page;
+
+    const skip = (page - 1) * size;
+
+    return {
+        skip,
+        take: size,
+    };
 }

@@ -5,6 +5,9 @@ import {
 } from '../validators/event.js';
 import { validateEventSearchFilters } from '../validators/searchFilters.js';
 
+export const DEFAULT_PAGE_SIZE = 10;
+export const FIRST_PAGE = 1;
+
 export class EventService {
     constructor(eventRepository, categoryRepository) {
         this.eventRepository = eventRepository;
@@ -62,7 +65,30 @@ export class EventService {
             name: true,
             description: true,
             date: true,
+            category: true,
         });
+    }
+
+    async getPage(size = DEFAULT_PAGE_SIZE, page = FIRST_PAGE, filters) {
+        const validation = await validateEventSearchFilters(filters);
+        if (!validation.success) {
+            throw Errors.validation(
+                'invalid filter query params',
+                validation.error,
+            );
+        }
+
+        return this.eventRepository.findAllEventsPaginated(
+            validation.data,
+            {
+                id: true,
+                name: true,
+                description: true,
+                date: true,
+                category: true,
+            },
+            { size, page },
+        );
     }
 
     async update(eventId, eventManager, eventDetails) {

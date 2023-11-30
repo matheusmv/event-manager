@@ -9,6 +9,8 @@ import {
     ensureAuthorization,
 } from '../middlewares/auth.js';
 
+import { role } from '../helpers/auth.js';
+
 import { CategoryRepository } from '../repositories/categories.js';
 
 import { CategoryService } from '../services/categories.js';
@@ -35,19 +37,19 @@ export function buildCategoryRoute(router) {
     router.post(
         endPoint,
         ensureAuthentication(authService),
-        ensureAuthorization(['ADMIN', 'MANAGER']),
+        ensureAuthorization([role.ADMIN, role.MANAGER]),
         createCategory(categoryService),
     );
     router.put(
         `${endPoint}/:id`,
         ensureAuthentication(authService),
-        ensureAuthorization(['ADMIN', 'MANAGER']),
+        ensureAuthorization([role.ADMIN, role.MANAGER]),
         updateCategory(categoryService),
     );
     router.delete(
         `${endPoint}/:id`,
         ensureAuthentication(authService),
-        ensureAuthorization(['ADMIN', 'MANAGER']),
+        ensureAuthorization([role.ADMIN, role.MANAGER]),
         deleteCategory(categoryService),
     );
 }

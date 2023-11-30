@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client';
 
 import { Password } from '../../helpers/password.js';
 import { config } from '../../env.js';
+import { role } from '../../helpers/auth.js';
 
 const prisma = new PrismaClient();
 
@@ -11,7 +12,7 @@ async function main() {
             data: {
                 email: config.admin.email,
                 password: await Password.hash(config.admin.password),
-                role: 'ADMIN',
+                role: role.ADMIN,
             },
         })
         .then(() => {
