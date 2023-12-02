@@ -120,7 +120,7 @@ locais e datas.
      | Opção       | Parâmetro | Tipo   | Exemplo  |
      |:-----------:|:---------:|:------:|:--------:|
      | página      | **page**  | number | /events/page?page=1  |
-     | quantidade  | **size**  | number | /events/size?size=10 |
+     | quantidade  | **size**  | number | /events/page?size=10 |
 
    - *Obs.: todos os parâmetros de filtro/pesquisa podem ser aplicados*
 
@@ -355,8 +355,8 @@ locais e datas.
      | Status  | Resultado |
      |:-------:|:---------:|
      | **200** | Recurso encontrado          |
-     | **404** | Recurso não existe          |
      | **401** | Recurso requer autenticação |
+     | **404** | Recurso não existe          |
 
  - Buscar usuário cadastrado
 
