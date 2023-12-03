@@ -200,11 +200,20 @@ function buildWhereClauseFromFilters(filters) {
     const { eventName, category, cep, state, city, neighborhood, street } =
         filters;
 
+    let categoryQuery = category
+        ? category
+              .split(',')
+              .map((c) => c.trim())
+              .filter((c) => c !== '')
+        : undefined;
+
     return {
         name: { contains: eventName },
         date: date,
         category: {
-            name: category,
+            name: {
+                in: categoryQuery,
+            },
         },
         local: {
             cep: cep,
