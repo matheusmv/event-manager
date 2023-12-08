@@ -129,7 +129,7 @@ export class EventRepository {
             meta: {
                 itemsPerPage: parseInt(size) || DEFAULT_PAGE_SIZE,
                 totalItems: total,
-                currentPage: page,
+                currentPage: parseInt(page),
                 totalPages: Math.ceil(total / size),
             },
         };

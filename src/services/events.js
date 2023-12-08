@@ -86,6 +86,13 @@ export class EventService {
                 description: true,
                 date: true,
                 category: true,
+                local: {
+                    select: {
+                        id: true,
+                        city: true,
+                        state: true,
+                    },
+                },
             },
             { size, page },
         );
