@@ -234,7 +234,7 @@ function buildOrderByClauseFromFilters(filters) {
         };
     } else {
         orderBy = {
-            id: filters.order ? filters.order : 'asc',
+            date: filters.order ? filters.order : 'asc',
         };
     }
 
