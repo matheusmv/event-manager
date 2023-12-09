@@ -226,19 +226,24 @@ function buildWhereClauseFromFilters(filters) {
 }
 
 function buildOrderByClauseFromFilters(filters) {
-    let orderBy = undefined;
+    const order = filters.order || 'asc';
 
-    if (filters.orderBy) {
-        orderBy = {
-            [filters.orderBy]: filters.order ? filters.order : 'asc',
-        };
-    } else {
-        orderBy = {
-            date: filters.order ? filters.order : 'asc',
-        };
-    }
+    const getOrderByQuery = (field, order) => {
+        if (!field) {
+            return { date: order };
+        }
 
-    return orderBy;
+        switch (field) {
+            case 'category':
+                return { category: { name: order } };
+            case 'local':
+                return { local: { city: order } };
+            default:
+                return { [field]: order };
+        }
+    };
+
+    return getOrderByQuery(filters.orderBy, order);
 }
 
 function buildOffsetPagination(size, page) {
