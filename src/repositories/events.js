@@ -208,7 +208,7 @@ function buildWhereClauseFromFilters(filters) {
         : undefined;
 
     return {
-        name: { contains: eventName },
+        name: { contains: eventName, mode: 'insensitive' },
         date: date,
         category: {
             name: {
