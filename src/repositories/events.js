@@ -231,18 +231,10 @@ function buildOrderByClauseFromFilters({ orderBy, order }) {
 }
 
 function buildOffsetPagination(size, page) {
-    if (size !== undefined && typeof size !== 'number' && size !== '') {
-        size = parseInt(size) || DEFAULT_PAGE_SIZE;
-    }
+    size = parseInt(size) || DEFAULT_PAGE_SIZE;
+    page = parseInt(page) || FIRST_PAGE;
 
-    if (page !== undefined && typeof page !== 'number' && page !== '') {
-        page = parseInt(page) || FIRST_PAGE;
-    }
-
-    size = size < 1 ? DEFAULT_PAGE_SIZE : size;
-    page = page < 1 ? FIRST_PAGE : page;
-
-    const skip = (page - 1) * size;
+    const skip = Math.max((page - 1) * size, 0);
 
     return {
         skip,
