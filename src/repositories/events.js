@@ -123,17 +123,17 @@ export class EventRepository {
     ) {
         const categoryUpdate = category && { connect: { name: category } };
         const managerUpdate = manager && { connect: { id: manager } };
-        const localUpdate = local
-            ? {
-                  cep: local.cep,
-                  state: local.state,
-                  city: local.city,
-                  neighborhood: local.neighborhood,
-                  street: local.street,
-                  number: local.number,
-                  complement: local.complement,
-              }
-            : undefined;
+        const localUpdate = local && {
+            udpate: {
+                cep: local.cep,
+                state: local.state,
+                city: local.city,
+                neighborhood: local.neighborhood,
+                street: local.street,
+                number: local.number,
+                complement: local.complement,
+            },
+        };
 
         return this.prisma.event.update({
             where: {
@@ -145,9 +145,7 @@ export class EventRepository {
                 description,
                 category: categoryUpdate,
                 manager: managerUpdate,
-                local: {
-                    update: { localUpdate },
-                },
+                local: localUpdate,
             },
         });
     }
