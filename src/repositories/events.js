@@ -135,15 +135,22 @@ export class EventRepository {
         };
     }
 
-    async updateEvent(eventId, eventDetails) {
-        const { name, date, description, local } = eventDetails;
-
-        const category = eventDetails.category
-            ? { connect: { name: eventDetails.category } }
-            : undefined;
-
-        const manager = eventDetails.manager
-            ? { connect: { id: eventDetails.manager } }
+    async updateEvent(
+        eventId,
+        { name, date, description, local, category, manager },
+    ) {
+        const categoryUpdate = category && { connect: { name: category } };
+        const managerUpdate = manager && { connect: { id: manager } };
+        const localUpdate = local
+            ? {
+                  cep: local.cep,
+                  state: local.state,
+                  city: local.city,
+                  neighborhood: local.neighborhood,
+                  street: local.street,
+                  number: local.number,
+                  complement: local.complement,
+              }
             : undefined;
 
         return this.prisma.event.update({
@@ -154,18 +161,10 @@ export class EventRepository {
                 name,
                 date,
                 description,
-                category,
-                manager,
+                category: categoryUpdate,
+                manager: managerUpdate,
                 local: {
-                    update: {
-                        cep: local ? local.cep : undefined,
-                        state: local ? local.state : undefined,
-                        city: local ? local.city : undefined,
-                        neighborhood: local ? local.neighborhood : undefined,
-                        street: local ? local.street : undefined,
-                        number: local ? local.number : undefined,
-                        complement: local ? local.complement : undefined,
-                    },
+                    update: { localUpdate },
                 },
             },
         });
