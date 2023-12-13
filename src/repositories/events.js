@@ -185,19 +185,24 @@ function buildWhereClauseFromFilters({
         return date;
     };
 
-    const categoryFilter = category
-        ?.split(',')
-        .map((c) => c.trim())
-        .filter((c) => c !== '');
+    const nameFilter = eventName && {
+        contains: eventName,
+        mode: 'insensitive',
+    };
+
+    const categoryFilter = category && {
+        name: {
+            in: category
+                .split(',')
+                .map((c) => c.trim())
+                .filter((c) => c !== ''),
+        },
+    };
 
     return {
-        name: { contains: eventName, mode: 'insensitive' },
+        name: nameFilter,
         date: buildDateFilter(),
-        category: {
-            name: {
-                in: categoryFilter,
-            },
-        },
+        category: categoryFilter,
         local: {
             cep,
             state,
