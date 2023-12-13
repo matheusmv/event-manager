@@ -1,3 +1,4 @@
+import { role } from '../helpers/auth.js';
 import { Errors } from '../helpers/errors.js';
 import {
     validateEventCreation,
@@ -170,6 +171,6 @@ function selectEventWithCategoryNameAndLocationDetails() {
 
 function isResourceOwnerOrAdmin(event, eventManager) {
     return (
-        event.manager.id === eventManager.id || eventManager.role === 'ADMIN'
+        event.manager.id === eventManager.id || eventManager.role === role.ADMIN
     );
 }

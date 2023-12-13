@@ -1,3 +1,4 @@
+import { role } from '../helpers/auth.js';
 import { Errors } from '../helpers/errors.js';
 import { Password } from '../helpers/password.js';
 import {
@@ -99,5 +100,5 @@ export class UserService {
 }
 
 function isAccountOwnerOrAdmin(user, eventManager) {
-    return user.id === eventManager.id || eventManager.role === 'ADMIN';
+    return user.id === eventManager.id || eventManager.role === role.ADMIN;
 }
