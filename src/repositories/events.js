@@ -211,10 +211,8 @@ function buildWhereClauseFromFilters({
     };
 }
 
-function buildOrderByClauseFromFilters(filters) {
-    const order = filters.order || 'asc';
-
-    const getOrderByQuery = (field, order) => {
+function buildOrderByClauseFromFilters({ orderBy, order }) {
+    const getOrderByClause = (field, order = 'asc') => {
         if (!field) {
             return { date: order };
         }
@@ -229,7 +227,7 @@ function buildOrderByClauseFromFilters(filters) {
         }
     };
 
-    return getOrderByQuery(filters.orderBy, order);
+    return getOrderByClause(orderBy, order);
 }
 
 function buildOffsetPagination(size, page) {
