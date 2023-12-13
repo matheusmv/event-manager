@@ -12,24 +12,14 @@ export class EventRepository {
         });
     }
 
-    async saveEventWithCategoryAndLocation(eventDetails) {
-        const {
-            name,
-            date,
-            description,
-            category,
-            manager,
-            local: {
-                cep,
-                state,
-                city,
-                neighborhood,
-                street,
-                number,
-                complement,
-            },
-        } = eventDetails;
-
+    async saveEventWithCategoryAndLocation({
+        name,
+        date,
+        description,
+        category,
+        manager,
+        local,
+    }) {
         return this.prisma.event.create({
             data: {
                 name,
@@ -42,15 +32,7 @@ export class EventRepository {
                     connect: { id: manager },
                 },
                 local: {
-                    create: {
-                        cep,
-                        state,
-                        city,
-                        neighborhood,
-                        street,
-                        number,
-                        complement,
-                    },
+                    create: local,
                 },
             },
         });
