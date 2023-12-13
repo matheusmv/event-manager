@@ -161,47 +161,49 @@ export class EventRepository {
     }
 }
 
-function buildWhereClauseFromFilters(filters) {
-    let date = undefined;
+function buildWhereClauseFromFilters({
+    eventName,
+    date,
+    startDate,
+    endDate,
+    category,
+    cep,
+    state,
+    city,
+    neighborhood,
+    street,
+}) {
+    const buildDateFilter = () => {
+        if (startDate) {
+            return { gte: startDate, lte: endDate };
+        }
 
-    if (filters.startDate) {
-        date = {
-            gte: filters.startDate,
-            lte: filters.endDate ? filters.endDate : undefined,
-        };
-    } else if (filters.endDate) {
-        date = {
-            gte: filters.startDate ? filters.startDate : today(),
-            lte: filters.endDate,
-        };
-    } else if (filters.date) {
-        date = filters.date;
-    }
+        if (endDate) {
+            return { gte: today(), lte: endDate };
+        }
 
-    const { eventName, category, cep, state, city, neighborhood, street } =
-        filters;
+        return date;
+    };
 
-    let categoryQuery = category
-        ? category
-              .split(',')
-              .map((c) => c.trim())
-              .filter((c) => c !== '')
-        : undefined;
+    const categoryFilter = category
+        ?.split(',')
+        .map((c) => c.trim())
+        .filter((c) => c !== '');
 
     return {
         name: { contains: eventName, mode: 'insensitive' },
-        date: date,
+        date: buildDateFilter(),
         category: {
             name: {
-                in: categoryQuery,
+                in: categoryFilter,
             },
         },
         local: {
-            cep: cep,
-            state: state,
-            city: city,
-            neighborhood: neighborhood,
-            street: street,
+            cep,
+            state,
+            city,
+            neighborhood,
+            street,
         },
     };
 }
