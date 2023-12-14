@@ -48,10 +48,10 @@ export class UserRepository {
         });
     }
 
-    async deleteUser(userId) {
+    async deleteUser(id) {
         return this.prisma.user.delete({
             where: {
-                id: userId,
+                id,
             },
         });
     }
