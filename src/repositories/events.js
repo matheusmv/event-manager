@@ -38,10 +38,10 @@ export class EventRepository {
         });
     }
 
-    async findEventById(eventId, select = undefined) {
+    async findEventById(id, select = undefined) {
         return this.prisma.event.findFirst({
             where: {
-                id: eventId,
+                id,
             },
             select: select,
         });
