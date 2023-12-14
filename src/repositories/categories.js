@@ -33,12 +33,12 @@ export class CategoryRepository {
         });
     }
 
-    async updateCategory(categoryId, data = undefined) {
+    async updateCategory(id, { name }) {
         return this.prisma.category.update({
             where: {
-                id: categoryId,
+                id,
             },
-            data: data,
+            data: { name },
         });
     }
 
