@@ -10,10 +10,10 @@ export class UserRepository {
         });
     }
 
-    async findUserById(userId, select = undefined) {
+    async findUserById(id, select = undefined) {
         return this.prisma.user.findFirst({
             where: {
-                id: userId,
+                id,
             },
             select: select,
         });
