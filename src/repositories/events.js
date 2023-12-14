@@ -57,20 +57,20 @@ export class EventRepository {
     }
 
     async findEventByDateAndLocation(
-        eventDate,
-        eventLocation,
+        date,
+        { cep, state, city, neighborhood, street, number },
         select = undefined,
     ) {
         return this.prisma.event.findFirst({
             where: {
-                date: eventDate,
+                date,
                 local: {
-                    cep: eventLocation.cep,
-                    state: eventLocation.state,
-                    city: eventLocation.city,
-                    neighborhood: eventLocation.neighborhood,
-                    street: eventLocation.street,
-                    number: eventLocation.number,
+                    cep,
+                    state,
+                    city,
+                    neighborhood,
+                    street,
+                    number,
                 },
             },
             select: select,
