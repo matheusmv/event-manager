@@ -18,10 +18,10 @@ export class LocationRepository {
         });
     }
 
-    async findLocationByCep(locationCep, select = undefined) {
+    async findLocationByCep(cep, select = undefined) {
         return this.prisma.local.findFirst({
             where: {
-                cep: locationCep,
+                cep,
             },
             select: select,
         });
