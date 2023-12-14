@@ -38,39 +38,39 @@ export class EventRepository {
         });
     }
 
-    async findEventById(eventId, select = undefined) {
+    async findEventById(id, select = undefined) {
         return this.prisma.event.findFirst({
             where: {
-                id: eventId,
+                id,
             },
             select: select,
         });
     }
 
-    async findEventByDate(eventDate, select = undefined) {
+    async findEventByDate(date, select = undefined) {
         return this.prisma.event.findFirst({
             where: {
-                date: eventDate,
+                date,
             },
             select: select,
         });
     }
 
     async findEventByDateAndLocation(
-        eventDate,
-        eventLocation,
+        date,
+        { cep, state, city, neighborhood, street, number },
         select = undefined,
     ) {
         return this.prisma.event.findFirst({
             where: {
-                date: eventDate,
+                date,
                 local: {
-                    cep: eventLocation.cep,
-                    state: eventLocation.state,
-                    city: eventLocation.city,
-                    neighborhood: eventLocation.neighborhood,
-                    street: eventLocation.street,
-                    number: eventLocation.number,
+                    cep,
+                    state,
+                    city,
+                    neighborhood,
+                    street,
+                    number,
                 },
             },
             select: select,
@@ -118,7 +118,7 @@ export class EventRepository {
     }
 
     async updateEvent(
-        eventId,
+        id,
         { name, date, description, local, category, manager },
     ) {
         const categoryUpdate = category && { connect: { name: category } };
@@ -137,7 +137,7 @@ export class EventRepository {
 
         return this.prisma.event.update({
             where: {
-                id: eventId,
+                id,
             },
             data: {
                 name,
@@ -150,10 +150,10 @@ export class EventRepository {
         });
     }
 
-    async deteleEvent(eventId) {
+    async deteleEvent(id) {
         return this.prisma.event.delete({
             where: {
-                id: eventId,
+                id,
             },
         });
     }

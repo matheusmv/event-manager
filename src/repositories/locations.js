@@ -9,19 +9,19 @@ export class LocationRepository {
         });
     }
 
-    async findLocationById(locationId, select = undefined) {
+    async findLocationById(id, select = undefined) {
         return this.prisma.local.findFirst({
             where: {
-                id: locationId,
+                id,
             },
             select: select,
         });
     }
 
-    async findLocationByCep(locationCep, select = undefined) {
+    async findLocationByCep(cep, select = undefined) {
         return this.prisma.local.findFirst({
             where: {
-                cep: locationCep,
+                cep,
             },
             select: select,
         });
@@ -33,19 +33,19 @@ export class LocationRepository {
         });
     }
 
-    async updateLocation(locationId, data) {
+    async updateLocation(id, data) {
         return this.prisma.local.update({
             where: {
-                id: locationId,
+                id,
             },
             data: data,
         });
     }
 
-    async deteleLocation(locationId) {
+    async deteleLocation(id) {
         return this.prisma.local.delete({
             where: {
-                id: locationId,
+                id,
             },
         });
     }

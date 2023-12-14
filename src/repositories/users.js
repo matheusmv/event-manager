@@ -10,19 +10,19 @@ export class UserRepository {
         });
     }
 
-    async findUserById(userId, select = undefined) {
+    async findUserById(id, select = undefined) {
         return this.prisma.user.findFirst({
             where: {
-                id: userId,
+                id,
             },
             select: select,
         });
     }
 
-    async findUserByEmail(userEmail, select = undefined) {
+    async findUserByEmail(email, select = undefined) {
         return this.prisma.user.findFirst({
             where: {
-                email: userEmail,
+                email,
             },
             select: select,
         });
@@ -34,24 +34,24 @@ export class UserRepository {
         });
     }
 
-    async updateUser(userId, userDetails, select = undefined) {
+    async updateUser(id, { email, password, role }, select = undefined) {
         return this.prisma.user.update({
             where: {
-                id: userId,
+                id,
             },
             data: {
-                email: userDetails.email,
-                password: userDetails.password,
-                role: userDetails.role,
+                email,
+                password,
+                role,
             },
             select: select,
         });
     }
 
-    async deleteUser(userId) {
+    async deleteUser(id) {
         return this.prisma.user.delete({
             where: {
-                id: userId,
+                id,
             },
         });
     }

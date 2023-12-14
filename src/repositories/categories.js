@@ -9,19 +9,19 @@ export class CategoryRepository {
         });
     }
 
-    async findCategoryById(categoryId, select = undefined) {
+    async findCategoryById(id, select = undefined) {
         return this.prisma.category.findFirst({
             where: {
-                id: categoryId,
+                id,
             },
             select: select,
         });
     }
 
-    async findCategoryByName(categoryName, select = undefined) {
+    async findCategoryByName(name, select = undefined) {
         return this.prisma.category.findFirst({
             where: {
-                name: categoryName,
+                name,
             },
             select: select,
         });
@@ -33,19 +33,19 @@ export class CategoryRepository {
         });
     }
 
-    async updateCategory(categoryId, data = undefined) {
+    async updateCategory(id, { name }) {
         return this.prisma.category.update({
             where: {
-                id: categoryId,
+                id,
             },
-            data: data,
+            data: { name },
         });
     }
 
-    async deteleCategory(categoryId) {
+    async deteleCategory(id) {
         return this.prisma.category.delete({
             where: {
-                id: categoryId,
+                id,
             },
         });
     }
