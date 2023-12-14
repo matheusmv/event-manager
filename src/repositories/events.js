@@ -47,10 +47,10 @@ export class EventRepository {
         });
     }
 
-    async findEventByDate(eventDate, select = undefined) {
+    async findEventByDate(date, select = undefined) {
         return this.prisma.event.findFirst({
             where: {
-                date: eventDate,
+                date,
             },
             select: select,
         });
