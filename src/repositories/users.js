@@ -34,15 +34,15 @@ export class UserRepository {
         });
     }
 
-    async updateUser(userId, userDetails, select = undefined) {
+    async updateUser(id, { email, password, role }, select = undefined) {
         return this.prisma.user.update({
             where: {
-                id: userId,
+                id,
             },
             data: {
-                email: userDetails.email,
-                password: userDetails.password,
-                role: userDetails.role,
+                email,
+                password,
+                role,
             },
             select: select,
         });
