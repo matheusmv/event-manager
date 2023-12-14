@@ -118,7 +118,7 @@ export class EventRepository {
     }
 
     async updateEvent(
-        eventId,
+        id,
         { name, date, description, local, category, manager },
     ) {
         const categoryUpdate = category && { connect: { name: category } };
@@ -137,7 +137,7 @@ export class EventRepository {
 
         return this.prisma.event.update({
             where: {
-                id: eventId,
+                id,
             },
             data: {
                 name,
