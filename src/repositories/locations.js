@@ -33,10 +33,10 @@ export class LocationRepository {
         });
     }
 
-    async updateLocation(locationId, data) {
+    async updateLocation(id, data) {
         return this.prisma.local.update({
             where: {
-                id: locationId,
+                id,
             },
             data: data,
         });
