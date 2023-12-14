@@ -19,10 +19,10 @@ export class UserRepository {
         });
     }
 
-    async findUserByEmail(userEmail, select = undefined) {
+    async findUserByEmail(email, select = undefined) {
         return this.prisma.user.findFirst({
             where: {
-                email: userEmail,
+                email,
             },
             select: select,
         });
