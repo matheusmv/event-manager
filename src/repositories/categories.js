@@ -42,10 +42,10 @@ export class CategoryRepository {
         });
     }
 
-    async deteleCategory(categoryId) {
+    async deteleCategory(id) {
         return this.prisma.category.delete({
             where: {
-                id: categoryId,
+                id,
             },
         });
     }
