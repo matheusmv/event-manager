@@ -150,10 +150,10 @@ export class EventRepository {
         });
     }
 
-    async deteleEvent(eventId) {
+    async deteleEvent(id) {
         return this.prisma.event.delete({
             where: {
-                id: eventId,
+                id,
             },
         });
     }
