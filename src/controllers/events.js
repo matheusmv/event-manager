@@ -6,7 +6,7 @@ export function getAllEvents(eventService) {
 
         return eventService
             .getAll(filters)
-            .then((event) => HttpOk(res, event))
+            .then((events) => HttpOk(res, events))
             .catch((err) => next(err));
     };
 }
@@ -17,7 +17,7 @@ export function getEventsPage(eventService) {
 
         return eventService
             .getPage(size, page, filters)
-            .then((event) => HttpOk(res, event))
+            .then((events) => HttpOk(res, events))
             .catch((err) => next(err));
     };
 }

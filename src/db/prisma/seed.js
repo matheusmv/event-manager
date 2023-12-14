@@ -8,6 +8,42 @@ import { role } from '../../helpers/auth.js';
 
 const prisma = new PrismaClient();
 
+main()
+    .then(async () => {
+        await prisma.$disconnect();
+    })
+    .catch(async (err) => {
+        console.error(err);
+        await prisma.$disconnect();
+        process.exit(1);
+    });
+
+async function main() {
+    const admin = await prisma.user.upsert({
+        where: {
+            email: config.admin.email,
+        },
+        update: {},
+        create: {
+            email: config.admin.email,
+            password: await Password.hash(config.admin.password),
+            role: role.ADMIN,
+        },
+    });
+
+    console.log(
+        `admin created: \n\temail: ${admin.email}\n\tpassword: ${config.admin.password}`,
+    );
+
+    if (config.env === 'development') {
+        const { categories, events, adresses } = setupSeed(admin.id);
+
+        resetAndSeed(prisma.category, categories);
+        resetAndSeed(prisma.event, events);
+        resetAndSeed(prisma.local, adresses);
+    }
+}
+
 function setupSeed(managerId, total = 50) {
     const categories = [
         { id: faker.string.uuid(), name: 'música' },
@@ -48,59 +84,12 @@ function setupSeed(managerId, total = 50) {
     return { categories, events, adresses };
 }
 
-async function main() {
-    const admin = await prisma.user.upsert({
-        where: {
-            email: config.admin.email,
-        },
-        update: {},
-        create: {
-            email: config.admin.email,
-            password: await Password.hash(config.admin.password),
-            role: role.ADMIN,
-        },
-    });
-
-    console.log(
-        `admin created: \n\temail: ${admin.email}\n\tpassword: ${config.admin.password}`,
-    );
-
-    if (config.env === 'development') {
-        const { categories, events, adresses } = setupSeed(admin.id);
-
-        await prisma.local.deleteMany();
-        await prisma.event.deleteMany();
-        await prisma.category.deleteMany();
-
-        await prisma.category
-            .createMany({
-                data: categories,
-                skipDuplicates: true,
-            })
-            .then((r) => console.log(r));
-
-        await prisma.event
-            .createMany({
-                data: events,
-                skipDuplicates: true,
-            })
-            .then((r) => console.log(r));
-
-        await prisma.local
-            .createMany({
-                data: adresses,
-                skipDuplicates: true,
-            })
-            .then((r) => console.log(r));
-    }
+async function resetAndSeed(prismaModel, values) {
+    await prismaModel?.deleteMany();
+    await prismaModel
+        ?.createMany({
+            data: values,
+            skipDuplicates: true,
+        })
+        .then((r) => console.log(r));
 }
-
-main()
-    .then(async () => {
-        await prisma.$disconnect();
-    })
-    .catch(async (err) => {
-        console.error(err);
-        await prisma.$disconnect();
-        process.exit(1);
-    });

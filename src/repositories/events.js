@@ -12,24 +12,14 @@ export class EventRepository {
         });
     }
 
-    async saveEventWithCategoryAndLocation(eventDetails) {
-        const {
-            name,
-            date,
-            description,
-            category,
-            manager,
-            local: {
-                cep,
-                state,
-                city,
-                neighborhood,
-                street,
-                number,
-                complement,
-            },
-        } = eventDetails;
-
+    async saveEventWithCategoryAndLocation({
+        name,
+        date,
+        description,
+        category,
+        manager,
+        local,
+    }) {
         return this.prisma.event.create({
             data: {
                 name,
@@ -42,15 +32,7 @@ export class EventRepository {
                     connect: { id: manager },
                 },
                 local: {
-                    create: {
-                        cep,
-                        state,
-                        city,
-                        neighborhood,
-                        street,
-                        number,
-                        complement,
-                    },
+                    create: local,
                 },
             },
         });
@@ -135,16 +117,23 @@ export class EventRepository {
         };
     }
 
-    async updateEvent(eventId, eventDetails) {
-        const { name, date, description, local } = eventDetails;
-
-        const category = eventDetails.category
-            ? { connect: { name: eventDetails.category } }
-            : undefined;
-
-        const manager = eventDetails.manager
-            ? { connect: { id: eventDetails.manager } }
-            : undefined;
+    async updateEvent(
+        eventId,
+        { name, date, description, local, category, manager },
+    ) {
+        const categoryUpdate = category && { connect: { name: category } };
+        const managerUpdate = manager && { connect: { id: manager } };
+        const localUpdate = local && {
+            udpate: {
+                cep: local.cep,
+                state: local.state,
+                city: local.city,
+                neighborhood: local.neighborhood,
+                street: local.street,
+                number: local.number,
+                complement: local.complement,
+            },
+        };
 
         return this.prisma.event.update({
             where: {
@@ -154,19 +143,9 @@ export class EventRepository {
                 name,
                 date,
                 description,
-                category,
-                manager,
-                local: {
-                    update: {
-                        cep: local ? local.cep : undefined,
-                        state: local ? local.state : undefined,
-                        city: local ? local.city : undefined,
-                        neighborhood: local ? local.neighborhood : undefined,
-                        street: local ? local.street : undefined,
-                        number: local ? local.number : undefined,
-                        complement: local ? local.complement : undefined,
-                    },
-                },
+                category: categoryUpdate,
+                manager: managerUpdate,
+                local: localUpdate,
             },
         });
     }
@@ -180,55 +159,60 @@ export class EventRepository {
     }
 }
 
-function buildWhereClauseFromFilters(filters) {
-    let date = undefined;
+function buildWhereClauseFromFilters({
+    eventName,
+    date,
+    startDate,
+    endDate,
+    category,
+    cep,
+    state,
+    city,
+    neighborhood,
+    street,
+}) {
+    const buildDateFilter = () => {
+        if (startDate) {
+            return { gte: startDate, lte: endDate };
+        }
 
-    if (filters.startDate) {
-        date = {
-            gte: filters.startDate,
-            lte: filters.endDate ? filters.endDate : undefined,
-        };
-    } else if (filters.endDate) {
-        date = {
-            gte: filters.startDate ? filters.startDate : today(),
-            lte: filters.endDate,
-        };
-    } else if (filters.date) {
-        date = filters.date;
-    }
+        if (endDate) {
+            return { gte: today(), lte: endDate };
+        }
 
-    const { eventName, category, cep, state, city, neighborhood, street } =
-        filters;
+        return date;
+    };
 
-    let categoryQuery = category
-        ? category
-              .split(',')
-              .map((c) => c.trim())
-              .filter((c) => c !== '')
-        : undefined;
+    const nameFilter = eventName && {
+        contains: eventName,
+        mode: 'insensitive',
+    };
+
+    const categoryFilter = category && {
+        name: {
+            in: category
+                .split(',')
+                .map((c) => c.trim())
+                .filter((c) => c !== ''),
+        },
+    };
 
     return {
-        name: { contains: eventName, mode: 'insensitive' },
-        date: date,
-        category: {
-            name: {
-                in: categoryQuery,
-            },
-        },
+        name: nameFilter,
+        date: buildDateFilter(),
+        category: categoryFilter,
         local: {
-            cep: cep,
-            state: state,
-            city: city,
-            neighborhood: neighborhood,
-            street: street,
+            cep,
+            state,
+            city,
+            neighborhood,
+            street,
         },
     };
 }
 
-function buildOrderByClauseFromFilters(filters) {
-    const order = filters.order || 'asc';
-
-    const getOrderByQuery = (field, order) => {
+function buildOrderByClauseFromFilters({ orderBy, order }) {
+    const getOrderByClause = (field, order = 'asc') => {
         if (!field) {
             return { date: order };
         }
@@ -243,22 +227,14 @@ function buildOrderByClauseFromFilters(filters) {
         }
     };
 
-    return getOrderByQuery(filters.orderBy, order);
+    return getOrderByClause(orderBy, order);
 }
 
 function buildOffsetPagination(size, page) {
-    if (size !== undefined && typeof size !== 'number' && size !== '') {
-        size = parseInt(size) || DEFAULT_PAGE_SIZE;
-    }
+    size = parseInt(size) || DEFAULT_PAGE_SIZE;
+    page = parseInt(page) || FIRST_PAGE;
 
-    if (page !== undefined && typeof page !== 'number' && page !== '') {
-        page = parseInt(page) || FIRST_PAGE;
-    }
-
-    size = size < 1 ? DEFAULT_PAGE_SIZE : size;
-    page = page < 1 ? FIRST_PAGE : page;
-
-    const skip = (page - 1) * size;
+    const skip = Math.max((page - 1) * size, 0);
 
     return {
         skip,
