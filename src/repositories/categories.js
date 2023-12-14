@@ -18,10 +18,10 @@ export class CategoryRepository {
         });
     }
 
-    async findCategoryByName(categoryName, select = undefined) {
+    async findCategoryByName(name, select = undefined) {
         return this.prisma.category.findFirst({
             where: {
-                name: categoryName,
+                name,
             },
             select: select,
         });
