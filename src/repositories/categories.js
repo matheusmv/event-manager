@@ -9,10 +9,10 @@ export class CategoryRepository {
         });
     }
 
-    async findCategoryById(categoryId, select = undefined) {
+    async findCategoryById(id, select = undefined) {
         return this.prisma.category.findFirst({
             where: {
-                id: categoryId,
+                id,
             },
             select: select,
         });
