@@ -9,10 +9,10 @@ export class LocationRepository {
         });
     }
 
-    async findLocationById(locationId, select = undefined) {
+    async findLocationById(id, select = undefined) {
         return this.prisma.local.findFirst({
             where: {
-                id: locationId,
+                id,
             },
             select: select,
         });
