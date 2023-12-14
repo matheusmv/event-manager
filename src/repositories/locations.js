@@ -42,10 +42,10 @@ export class LocationRepository {
         });
     }
 
-    async deteleLocation(locationId) {
+    async deteleLocation(id) {
         return this.prisma.local.delete({
             where: {
-                id: locationId,
+                id,
             },
         });
     }
